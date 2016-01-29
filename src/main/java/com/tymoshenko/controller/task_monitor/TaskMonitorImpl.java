@@ -1,6 +1,7 @@
 package com.tymoshenko.controller.task_monitor;
 
 import com.tymoshenko.controller.task_monitor.command.Command;
+import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,9 @@ public class TaskMonitorImpl implements TaskMonitor {
 
     public List<TaskDto> getTaskList() {
         List<String> taskListOut = taskListCommand.execute();
-        return taskListParser.parse(taskListOut);
+        List<TaskDto> taskDtoList = taskListParser.parse(taskListOut);
+        taskDtoList.sort(new MemoryUsedDescendingComparator());
+        return taskDtoList;
     }
 
     public void printTaskListToConsole() {

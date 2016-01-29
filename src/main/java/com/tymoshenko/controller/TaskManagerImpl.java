@@ -21,11 +21,7 @@ public class TaskManagerImpl implements TaskManager {
     private TaskMonitor taskMonitor;
 
     public void taskList() {
-//        taskMonitor.printTaskListToConsole();
-//        System.out.println();
-        List<TaskDto> taskDtoList = taskMonitor.getTaskList();
-        taskDtoList.sort(new MemoryUsedDescendingComparator());
-        taskDtoList.forEach(System.out::println);
+        taskMonitor.getTaskList().forEach(System.out::println);
     }
 
     public void taskListAggregatedByName() {
