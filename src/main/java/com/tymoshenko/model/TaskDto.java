@@ -1,5 +1,7 @@
 package com.tymoshenko.model;
 
+import java.util.Locale;
+
 /**
  * @author Yakiv Tymoshenko
  * @since 29.01.2016
@@ -48,6 +50,11 @@ public class TaskDto {
         this.name = builder.name;
         this.pid = builder.pid;
         this.memory = builder.memory;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name, pid, Integer.valueOf(memory));
     }
 
     public String getName() {

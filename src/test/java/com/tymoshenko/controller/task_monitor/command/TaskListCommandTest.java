@@ -9,6 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Yakiv
  * @since 29.01.2016
@@ -23,8 +26,7 @@ public class TaskListCommandTest {
     @Test
     public void testRun() throws Exception {
         List<String> lines = command.execute();
-        for (String line : lines) {
-            System.out.println(line);
-        }
+        assertNotNull(lines);
+        assertTrue(lines.size() >= 4);
     }
 }

@@ -35,10 +35,7 @@ public class TaskMonitorImplTest {
     @Test
     public void testGetTaskList() throws Exception {
         List<TaskDto> taskDtos = taskMonitor.getTaskList();
-
-        for (TaskDto taskDto : taskDtos) {
-            System.out.println(taskDto.getName() + "\t" + taskDto.getPid() + "\t" + taskDto.getMemory());
-        }
+        taskDtos.forEach(System.out::println);
 
         int expectedSize = taskListCommand.execute().size() - TaskListParser.FIRST_PROCESS_LINE_INDEX;
         assertEquals(expectedSize, taskDtos.size());
