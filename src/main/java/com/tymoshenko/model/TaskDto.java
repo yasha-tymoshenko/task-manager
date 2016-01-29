@@ -68,4 +68,8 @@ public class TaskDto {
     public String getMemory() {
         return memory;
     }
+
+    public void setMemory(String memory) {
+        this.memory = memory;
+    }
 }

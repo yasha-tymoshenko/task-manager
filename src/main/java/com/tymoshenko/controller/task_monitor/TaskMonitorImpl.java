@@ -2,11 +2,14 @@ package com.tymoshenko.controller.task_monitor;
 
 import com.tymoshenko.controller.task_monitor.command.Command;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
+import com.tymoshenko.controller.task_monitor.comparator.NameAscendingComparator;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author Yakiv Tymoshenko
@@ -25,6 +28,7 @@ public class TaskMonitorImpl implements TaskMonitor {
     public List<TaskDto> getTaskList() {
         List<String> taskListOut = taskListCommand.execute();
         List<TaskDto> taskDtoList = taskListParser.parse(taskListOut);
+        taskDtoList = aggregateDuplicates(taskDtoList);
         taskDtoList.sort(new MemoryUsedDescendingComparator());
         return taskDtoList;
     }
@@ -32,5 +36,27 @@ public class TaskMonitorImpl implements TaskMonitor {
     public void printTaskListToConsole() {
         List<String> taskListOutput = taskListCommand.execute();
         taskListOutput.forEach(System.out::println);
+    }
+
+    List<TaskDto> aggregateDuplicates(List<TaskDto> taskDtoList) {
+        List<TaskDto> duplicates = newArrayList();
+        taskDtoList.sort(new NameAscendingComparator());
+        TaskDto prev = taskDtoList.get(0);
+        int duplicatesIndex = 0;
+        duplicates.add(duplicatesIndex, prev);
+        long totalMemory = (long) Integer.valueOf(prev.getMemory());
+        for (int i = 1; i < taskDtoList.size(); i++) {
+            TaskDto current = taskDtoList.get(i);
+            if (prev.getName().equalsIgnoreCase(current.getName())) {
+                totalMemory += Integer.valueOf(current.getMemory());
+            } else {
+                duplicates.get(duplicatesIndex).setMemory(Long.toString(totalMemory));
+                prev = current;
+                totalMemory = (long) Integer.valueOf(prev.getMemory());
+                duplicatesIndex++;
+                duplicates.add(duplicatesIndex, current);
+            }
+        }
+        return duplicates;
     }
 }
