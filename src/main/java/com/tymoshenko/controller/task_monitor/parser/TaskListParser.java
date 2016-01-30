@@ -11,5 +11,8 @@ import java.util.List;
  * @since 30.01.2016
  */
 public interface TaskListParser {
+    // Skip column names
+    static final int FIRST_PROCESS_LINE_INDEX = 3;
+
     List<TaskDto> parse(List<String> taskList);
 }

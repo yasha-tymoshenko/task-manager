@@ -15,7 +15,7 @@ import java.util.List;
 public interface TaskManager {
 
     /**
-     * Initilizes task list, sorted by memory used
+     * Initilizes task list.
      */
     void taskList();
 

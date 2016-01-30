@@ -13,8 +13,6 @@ import static com.google.common.collect.Lists.newArrayList;
  */
 @Component
 class TaskListParserImpl implements TaskListParser {
-    // Skip column names
-    static final int FIRST_PROCESS_LINE_INDEX = 3;
 
     public List<TaskDto> parse(List<String> taskListOut) {
         List<TaskDto> taskList = newArrayList();

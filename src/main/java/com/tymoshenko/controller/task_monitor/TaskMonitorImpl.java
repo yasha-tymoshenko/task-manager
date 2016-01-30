@@ -7,6 +7,7 @@ import com.tymoshenko.controller.task_monitor.parser.TaskListParser;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -28,16 +29,11 @@ public class TaskMonitorImpl implements TaskMonitor {
 
     public List<TaskDto> taskList() {
         List<String> taskListOut = taskListCommand.execute();
-        List<TaskDto> taskDtoList = taskListParser.parse(taskListOut);
-        return taskDtoList;
-    }
-
-    public void printTaskListToConsole() {
-        List<String> taskListOutput = taskListCommand.execute();
-        taskListOutput.forEach(System.out::println);
+        return taskListParser.parse(taskListOut);
     }
 
     public List<TaskDto> collapseDuplicatesByNameAndAggregateMemoryUsed(List<TaskDto> taskDtoList) {
+        Assert.notEmpty(taskDtoList, "taskDtoList is empty");
         List<TaskDto> duplicates = newArrayList();
         taskDtoList.sort(new NameAscendingComparator());
         TaskDto prev = taskDtoList.get(0);
@@ -48,12 +44,11 @@ public class TaskMonitorImpl implements TaskMonitor {
             TaskDto current = taskDtoList.get(i);
             if (prev.getName().equalsIgnoreCase(current.getName())) {
                 totalMemory += Integer.valueOf(current.getMemory());
-            } else {
                 duplicates.get(duplicatesIndex).setMemory(Long.toString(totalMemory));
+            } else {
                 prev = current;
-                totalMemory = (long) Integer.valueOf(prev.getMemory());
-                duplicatesIndex++;
-                duplicates.add(duplicatesIndex, current);
+                totalMemory = (long) Integer.valueOf(current.getMemory());
+                duplicates.add(++duplicatesIndex, current);
             }
         }
         return duplicates;

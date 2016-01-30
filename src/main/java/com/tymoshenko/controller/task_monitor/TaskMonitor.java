@@ -19,6 +19,4 @@ public interface TaskMonitor {
     List<TaskDto> taskList();
 
     List<TaskDto> collapseDuplicatesByNameAndAggregateMemoryUsed(List<TaskDto> taskDtoList);
-
-    void printTaskListToConsole();
 }
