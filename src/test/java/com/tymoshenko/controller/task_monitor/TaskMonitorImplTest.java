@@ -34,7 +34,7 @@ public class TaskMonitorImplTest {
 
     @Test
     public void testGetTaskList() throws Exception {
-        List<TaskDto> taskDtos = taskMonitor.getTaskList();
+        List<TaskDto> taskDtos = taskMonitor.taskList();
         taskDtos.forEach(System.out::println);
 
 //        int expectedSize = taskListCommand.execute().size() - TaskListParser.FIRST_PROCESS_LINE_INDEX;

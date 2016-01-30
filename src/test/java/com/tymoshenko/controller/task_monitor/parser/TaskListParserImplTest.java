@@ -1,4 +1,4 @@
-package com.tymoshenko.controller.task_monitor;
+package com.tymoshenko.controller.task_monitor.parser;
 
 import com.tymoshenko.controller.Application;
 import com.tymoshenko.model.TaskDto;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Application.class)
-public class TaskListParserTest {
+public class TaskListParserImplTest {
 
     // Processes = 21, but siz = 24. 3 redundant lines for formatting (e.g. col names).
     private static final List<String> _taskListOut = Arrays.asList(
@@ -36,12 +36,12 @@ public class TaskListParserTest {
     );
 
     @Autowired
-    private TaskListParser parser;
+    private TaskListParserImpl parser;
 
     @Test
     public void parse_ShouldIgnoreLinesThatAreNotProcesses() throws Exception {
         List<TaskDto> taskDtoList = parser.parse(_taskListOut);
-        assertEquals("Unexpected taskDtoList size", _taskListOut.size() - TaskListParser.FIRST_PROCESS_LINE_INDEX, taskDtoList.size());
+        assertEquals("Unexpected taskDtoList size", _taskListOut.size() - TaskListParserImpl.FIRST_PROCESS_LINE_INDEX, taskDtoList.size());
     }
 
     @Test

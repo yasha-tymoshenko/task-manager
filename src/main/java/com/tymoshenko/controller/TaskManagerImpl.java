@@ -17,19 +17,31 @@ import java.util.List;
 @Component
 public class TaskManagerImpl implements TaskManager {
 
+    private List<TaskDto> taskList;
+
     @Autowired
     private TaskMonitor taskMonitor;
 
     public void taskList() {
-        taskMonitor.getTaskList().forEach(System.out::println);
+        this.taskList = taskMonitor.taskList();
     }
 
-    public void taskListAggregatedByName() {
-
+    public void taskListCollapseDuplicates() {
+        makeSureTaskListExists();
+        this.taskList = taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
     }
 
-    public void removeTask(String name) {
+    @Override
+    public void printTaskList() {
+        makeSureTaskListExists();
+        this.taskList.sort(new MemoryUsedDescendingComparator());
+        this.taskList.forEach(System.out::println);
+    }
 
+    private void makeSureTaskListExists() {
+        if (this.taskList == null) {
+            taskList();
+        }
     }
 
     public void exportTaskList(ExportFormat exportFormat, File exportFile) {
@@ -38,17 +50,5 @@ public class TaskManagerImpl implements TaskManager {
 
     public void importTaskList(File importFile) {
 
-    }
-
-    public void exportTaskList(ExportFormat exportFormat, String exportFileName) {
-
-    }
-
-    private void fillTaskDTOs() {
-
-    }
-
-    public void setTaskMonitor(TaskMonitor taskMonitor) {
-        this.taskMonitor = taskMonitor;
     }
 }

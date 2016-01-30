@@ -1,4 +1,4 @@
-package com.tymoshenko.controller.task_monitor;
+package com.tymoshenko.controller.task_monitor.parser;
 
 import com.tymoshenko.model.TaskDto;
 import org.springframework.stereotype.Component;
@@ -8,17 +8,15 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
- * Parses console output of wni32//tasklist command into List<TaskDto>.
- *
  * @author Yakiv Tymoshenko
  * @since 29.01.2016
  */
 @Component
-class TaskListParser {
+class TaskListParserImpl implements TaskListParser {
     // Skip column names
     static final int FIRST_PROCESS_LINE_INDEX = 3;
 
-    List<TaskDto> parse(List<String> taskListOut) {
+    public List<TaskDto> parse(List<String> taskListOut) {
         List<TaskDto> taskList = newArrayList();
         for (int i = FIRST_PROCESS_LINE_INDEX; i < taskListOut.size(); i++) {
             TaskDto taskDto = parseLine(taskListOut.get(i));

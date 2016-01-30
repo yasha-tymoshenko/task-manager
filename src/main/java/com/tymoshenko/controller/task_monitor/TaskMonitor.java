@@ -16,7 +16,9 @@ import java.util.List;
  */
 public interface TaskMonitor {
 
-    List<TaskDto> getTaskList();
+    List<TaskDto> taskList();
+
+    List<TaskDto> collapseDuplicatesByNameAndAggregateMemoryUsed(List<TaskDto> taskDtoList);
 
     void printTaskListToConsole();
 }

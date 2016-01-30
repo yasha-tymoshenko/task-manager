@@ -3,6 +3,7 @@ package com.tymoshenko.controller.task_monitor;
 import com.tymoshenko.controller.task_monitor.command.Command;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.controller.task_monitor.comparator.NameAscendingComparator;
+import com.tymoshenko.controller.task_monitor.parser.TaskListParser;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,11 +26,9 @@ public class TaskMonitorImpl implements TaskMonitor {
     private TaskListParser taskListParser;
 
 
-    public List<TaskDto> getTaskList() {
+    public List<TaskDto> taskList() {
         List<String> taskListOut = taskListCommand.execute();
         List<TaskDto> taskDtoList = taskListParser.parse(taskListOut);
-        taskDtoList = aggregateDuplicates(taskDtoList);
-        taskDtoList.sort(new MemoryUsedDescendingComparator());
         return taskDtoList;
     }
 
@@ -38,7 +37,7 @@ public class TaskMonitorImpl implements TaskMonitor {
         taskListOutput.forEach(System.out::println);
     }
 
-    List<TaskDto> aggregateDuplicates(List<TaskDto> taskDtoList) {
+    public List<TaskDto> collapseDuplicatesByNameAndAggregateMemoryUsed(List<TaskDto> taskDtoList) {
         List<TaskDto> duplicates = newArrayList();
         taskDtoList.sort(new NameAscendingComparator());
         TaskDto prev = taskDtoList.get(0);
