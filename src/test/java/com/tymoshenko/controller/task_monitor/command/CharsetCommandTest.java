@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.nio.charset.Charset;
 
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+
 /**
  * @author Yakiv
  * @since 29.01.2016
@@ -24,6 +26,6 @@ public class CharsetCommandTest {
     public void testRun() throws Exception {
         charsetCommand.init();
         Charset charset = charsetCommand.execute();
-        System.out.println("Charset is: " + charset);
+        assertEquals("Wrong charset", "IBM866", charset.toString());
     }
 }
