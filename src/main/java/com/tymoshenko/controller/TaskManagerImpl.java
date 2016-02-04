@@ -22,8 +22,9 @@ public class TaskManagerImpl implements TaskManager {
     @Autowired
     private TaskMonitor taskMonitor;
 
-    public void taskList() {
+    public List<TaskDto> taskList() {
         this.taskList = taskMonitor.taskList();
+        return taskList;
     }
 
     public void taskListCollapseDuplicates() {

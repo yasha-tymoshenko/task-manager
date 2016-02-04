@@ -17,7 +17,7 @@ public interface TaskManager {
     /**
      * Initilizes task list.
      */
-    void taskList();
+    List<TaskDto> taskList();
 
     /**
      * Tasks grouped by name and their memory aggregated.

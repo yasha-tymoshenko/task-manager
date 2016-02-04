@@ -1,6 +1,6 @@
 package com.tymoshenko.controller.task_monitor.parser;
 
-import com.tymoshenko.controller.Application;
+import com.tymoshenko.MainApp;
 import com.tymoshenko.model.TaskDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
  * @since 29.01.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = MainApp.class)
 public class TaskListParserImplTest {
 
     // Processes = 21, but siz = 24. 3 redundant lines for formatting (e.g. col names).

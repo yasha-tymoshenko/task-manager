@@ -1,5 +1,8 @@
 package com.tymoshenko.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.Locale;
 
 /**
@@ -41,35 +44,47 @@ public class TaskDto {
     }
 
     //================= Instance fileds and methods =================
-    private String name;
-    private String pid;
-    private String memory;
+    private StringProperty name;
+    private StringProperty pid;
+    private StringProperty memory;
 
     // Private bu intent - use the Builder instead
     private TaskDto(Builder builder) {
-        this.name = builder.name;
-        this.pid = builder.pid;
-        this.memory = builder.memory;
+        this.name = new SimpleStringProperty(builder.name);
+        this.pid = new SimpleStringProperty(builder.pid);
+        this.memory = new SimpleStringProperty(builder.memory);
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name, pid, Integer.valueOf(memory));
+        return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name.get(), pid.get(), Integer.valueOf(memory.get()));
     }
 
     public String getName() {
-        return name;
+        return name.get();
     }
 
     public String getPid() {
-        return pid;
+        return pid.get();
     }
 
     public String getMemory() {
+        return memory.get();
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    public StringProperty pidProperty() {
+        return pid;
+    }
+
+    public StringProperty memoryProperty() {
         return memory;
     }
 
     public void setMemory(String memory) {
-        this.memory = memory;
+        this.memory.set(memory);
     }
 }

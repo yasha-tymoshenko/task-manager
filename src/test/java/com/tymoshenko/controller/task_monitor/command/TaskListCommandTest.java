@@ -1,6 +1,6 @@
 package com.tymoshenko.controller.task_monitor.command;
 
-import com.tymoshenko.controller.Application;
+import com.tymoshenko.MainApp;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  * @since 29.01.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
+@ContextConfiguration(classes = MainApp.class)
 public class TaskListCommandTest {
 
     @Autowired
