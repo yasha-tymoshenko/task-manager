@@ -15,6 +15,6 @@ public class NameAscendingComparator implements Comparator<TaskDto> {
 
     @Override
     public int compare(TaskDto o1, TaskDto o2) {
-        return o1.getName().compareTo(o2.getName());
+        return o1.getName().compareToIgnoreCase(o2.getName());
     }
 }

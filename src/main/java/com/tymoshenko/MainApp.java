@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -44,11 +45,23 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Task Manager App");
+        this.primaryStage.setTitle("Task Manager");
+
+        setIcon();
 
         initSpringContext();
 
         initRootLayout();
+    }
+
+    private void setIcon() {
+        String iconPath = "/resources/images/task-manager-icon.png";
+        try {
+            Image icon = new Image(iconPath);
+            this.primaryStage.getIcons().add(icon);
+        } catch (IllegalArgumentException e) {
+            LOG.warn(String.format("Icon not found: %s", iconPath));
+        }
     }
 
 

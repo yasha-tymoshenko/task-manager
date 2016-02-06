@@ -2,6 +2,7 @@ package com.tymoshenko.controller;
 
 import com.tymoshenko.controller.task_monitor.TaskMonitor;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
+import com.tymoshenko.controller.task_monitor.comparator.NameAscendingComparator;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class TaskManagerImpl implements TaskManager {
 
     public List<TaskDto> taskList() {
         this.taskList = taskMonitor.taskList();
+        this.taskList.sort(new NameAscendingComparator());
         return taskList;
     }
 

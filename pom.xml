@@ -26,7 +26,7 @@
                 <version>2.7</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-fxml</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -36,6 +36,22 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/java/com/tymoshenko/view</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>

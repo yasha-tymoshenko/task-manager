@@ -30,7 +30,7 @@ public class TaskMonitorImplTest {
     @Autowired
     private Command<List<String>> taskListCommand;
 
-//    @Test// TODO investigate failure
+    @Test// TODO investigate failure
     public void testGetTaskList() throws Exception {
         List<TaskDto> taskDtos = taskMonitor.taskList();
 

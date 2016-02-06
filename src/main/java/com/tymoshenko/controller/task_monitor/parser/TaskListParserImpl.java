@@ -1,9 +1,16 @@
 package com.tymoshenko.controller.task_monitor.parser;
 
 import com.tymoshenko.model.TaskDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -14,21 +21,25 @@ import static com.google.common.collect.Lists.newArrayList;
 @Component
 class TaskListParserImpl implements TaskListParser {
 
+    private final static Logger LOG = LoggerFactory.getLogger(TaskListParserImpl.class);
+
     public List<TaskDto> parse(List<String> taskListOut) {
         List<TaskDto> taskList = newArrayList();
         for (int i = FIRST_PROCESS_LINE_INDEX; i < taskListOut.size(); i++) {
-            TaskDto taskDto = parseLine(taskListOut.get(i));
-            if (taskDto != null) {
+            TaskDto taskDto = null;
+            try {
+                taskDto = parseLine(taskListOut.get(i));
                 taskList.add(taskDto);
+            } catch (ParseException e) {
+                LOG.warn(e.getMessage());
             }
         }
         return taskList;
     }
 
-    TaskDto parseLine(String line) {
-        final String _space = "\\s";
-        final String _twoOrMoreSpaces = "\\s{2,}";
-        /* We expect the line to be in the following format:
+    TaskDto parseLine(String line) throws ParseException {
+        TaskDto taskDto;
+         /* We expect the line to be in the following format:
          (1) Name (2) PID <space> Session_Name (3) Session_Number (4) Memory_Used <space> Memory_Unit
          e.g.:
 
@@ -38,19 +49,21 @@ class TaskListParserImpl implements TaskListParser {
             System                           4 Services                   0   594 912 สม
             smss.exe                       420 Services                   0       216 สม
          */
-        final int _expectedTokensCount = 4;
-        TaskDto taskDto = null;
-        String[] tokens = line.split(_twoOrMoreSpaces);
-        if (tokens.length == _expectedTokensCount) {
-            String name = tokens[0];
-            String pid = tokens[1].split(_space)[0];
-            // Skip Memory_Unit and undo Integer formatting
-            String memory = removeNonDigitChars(tokens[3].split(_space)[0]);
+//        String regex = "(^\\p{L}+[\\s?\\p{Alnum}]*?) (\\d+?) ([\\s?\\p{Alnum}]*?) (\\d+?) (\\p{all}*)";
+        String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";
+        Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
+        Matcher matcher = pattern.matcher(line);
+        if (matcher.find()) {
+            String taskName = matcher.group(1).trim();
+            String pid = matcher.group(2).trim();
+            String memoryUsed = removeNonDigitChars(matcher.group(5).trim());
             taskDto = new TaskDto.Builder()
-                    .withName(name)
+                    .withName(taskName)
                     .withPid(pid)
-                    .withMemory(memory)
+                    .withMemory(memoryUsed)
                     .build();
+        } else {
+            throw new ParseException(String.format("Can't parse line representing a Task: %s", line), 0);
         }
         return taskDto;
     }
