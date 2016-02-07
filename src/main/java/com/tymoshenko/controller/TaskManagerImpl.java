@@ -29,16 +29,8 @@ public class TaskManagerImpl implements TaskManager {
         return taskList;
     }
 
-    public void taskListCollapseDuplicates() {
-        makeSureTaskListExists();
-        this.taskList = taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
-    }
-
-    @Override
-    public void printTaskList() {
-        makeSureTaskListExists();
-        this.taskList.sort(new MemoryUsedDescendingComparator());
-        this.taskList.forEach(System.out::println);
+    public List<TaskDto> taskListCollapseDuplicates(List<TaskDto> taskList) {
+        return taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
     }
 
     private void makeSureTaskListExists() {

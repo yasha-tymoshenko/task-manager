@@ -36,6 +36,7 @@ public class MainApp extends Application {
     private VBox rootLayout;
 
     private ApplicationContext ctx;
+    private TaskManager taskManager;
     private ObservableList<TaskDto> taskList;
 
     public static void main(String[] args) {
@@ -51,6 +52,8 @@ public class MainApp extends Application {
 
         initSpringContext();
 
+        taskList = FXCollections.observableArrayList(taskManager.taskList());
+
         initRootLayout();
     }
 
@@ -64,12 +67,9 @@ public class MainApp extends Application {
         }
     }
 
-
     private void initSpringContext() {
         this.ctx = new AnnotationConfigApplicationContext(MainApp.class);
-        TaskManager taskManager = ctx.getBean(TaskManager.class);
-        taskManager.taskListCollapseDuplicates();
-        taskList = FXCollections.observableArrayList(taskManager.taskList());
+        taskManager = ctx.getBean(TaskManager.class);
     }
 
     private void initRootLayout() {
@@ -93,4 +93,11 @@ public class MainApp extends Application {
         return taskList;
     }
 
+    public void refreshTaskList() {
+        taskList.setAll(taskManager.taskList());
+    }
+
+    public void groupTasksByName() {
+        taskList.setAll(taskManager.taskListCollapseDuplicates(taskList));
+    }
 }

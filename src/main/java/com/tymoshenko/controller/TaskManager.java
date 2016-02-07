@@ -23,12 +23,7 @@ public interface TaskManager {
      * Tasks grouped by name and their memory aggregated.
      * No duplicated task names.
      */
-    void taskListCollapseDuplicates();
-
-    /**
-     * Prints tasklist to console
-     */
-    void printTaskList();
+    List<TaskDto> taskListCollapseDuplicates(List<TaskDto> taskList);
 
     //TODo : export to Excel should also generate a chart about used memory by each task
     void exportTaskList(ExportFormat exportFormat, File exportFile);

@@ -70,8 +70,20 @@
                      <children>
                         <ToolBar layoutX="229.0" layoutY="14.0" prefHeight="49.0" prefWidth="1198.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
-                            <Button mnemonicParsing="false" text="Show tasks" />
-                              <CheckBox mnemonicParsing="false" text="Group by name" />
+                            <Button mnemonicParsing="false" onAction="#handleShowTasks" text="Show tasks" />
+                              <CheckBox fx:id="groupByNameCheckBox" mnemonicParsing="false" onAction="#handleGroupByName" text="Group by name" />
+                              <HBox>
+                                 <children>
+                                    <Label text="Find" />
+                                    <TextField />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Tasks:" />
+                                    <Label fx:id="tasksNumberLabel" />
+                                 </children>
+                              </HBox>
                           </items>
                         </ToolBar>
                      </children>
