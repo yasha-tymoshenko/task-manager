@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author Yakiv
@@ -35,6 +34,7 @@ public class TaskListParserImplTest {
             "System                           4 Services                   0   594 912 КБ\n",
             "smss.exe                       420 Services                   0       216 КБ\n",
             "csrss.exe                      588 Services                   0     1 428 КБ\n",
+            "Назва задачі Українською777              1000000 Сервіси                   400000000         4 КБ\n",
             "csrss.exe                      680 Console                    1     5 832 КБ\n",
             "services.exe                   752 Services                   0     3 908 КБ\n"
     );
@@ -94,28 +94,55 @@ public class TaskListParserImplTest {
     }
 
     @Test
-    public void parseLine_ShouldParseRussianName() throws Exception {
+    public void parseLine_ShouldParseTaskNameWithSpecialChars() throws Exception {
+        final String _line = "SystemTask007 specChar%&^@#!@#$%^&*()              0 Services                   0         4 КБ\n";
+
+        TaskDto taskDto = parser.parseLine(_line);
+
+        assertEquals("SystemTask007 specChar%&^@#!@#$%^&*()", taskDto.getName());
+        assertEquals("0", taskDto.getPid());
+        assertEquals("4", taskDto.getMemory());
+    }
+
+    @Test
+    public void parseLine_ShouldParseUkrainianName() throws Exception {
+        final String _line = "Назва задачі Українською777              1000000 Сервіси                   400000000         4 КБ\n";
+
+        TaskDto taskDto = parser.parseLine(_line);
+
+        assertEquals("Назва задачі Українською777", taskDto.getName());
+        assertEquals("1000000", taskDto.getPid());
+        assertEquals("4", taskDto.getMemory());
 
     }
 
     @Test
     public void parseLine_ShouldParseChineseName() throws Exception {
+        final String _line = " ??? ??? ? ??              1000000 ???                   400000000         4 КБ\n";
 
+        TaskDto taskDto = parser.parseLine(_line);
+
+        assertEquals(" ??? ??? ? ??", taskDto.getName());
+        assertEquals("1000000", taskDto.getPid());
+        assertEquals("4", taskDto.getMemory());
     }
 
-    @Test(expected = ParseException.class)
-    public void parseLine_ShouldThrowException_WhenNameIsDigitsOnly() throws Exception {
+    @Test
+    public void parseLine_ShouldParseWhenNameIsDigitsOnly() throws Exception {
         final String _line = "9823949234              0 Services                   0         4 КБ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
-        assertNull(taskDto);
+
+        assertEquals("9823949234", taskDto.getName());
+        assertEquals("0", taskDto.getPid());
+        assertEquals("4", taskDto.getMemory());
     }
 
     @Test(expected = ParseException.class)
     public void parseLine_ShouldThrowException_WhenLineIsNotTask() throws Exception {
         final String _line = "Имя образа                     PID Имя сессии          № сеанса       Память\n";
 
-        TaskDto taskDto = parser.parseLine(_line);
+        parser.parseLine(_line);
     }
 
     @Test(expected = ParseException.class)
@@ -134,11 +161,14 @@ public class TaskListParserImplTest {
         assertEquals("594912", taskDto.getMemory());
     }
 
-    @Test
+
+
+    //TODO remove this test (needed to test regex only)
+//    @Test
     public void testName() throws Exception {
 //        "smss.exe                       420 Services                   0       216 КБ\n",
         final String _line = _taskListOut.get(5);
-        String regex = "(^\\p{all}+[\\s?\\p{all}]*?) (\\d+?) (\\s?\\p{Alnum}*?) (\\d+?) (\\p{all}*)";
+        String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";
 
         Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CASE);
         Matcher matcher = pattern.matcher(_line);

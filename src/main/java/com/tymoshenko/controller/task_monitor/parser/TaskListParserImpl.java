@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -50,7 +52,7 @@ class TaskListParserImpl implements TaskListParser {
             smss.exe                       420 Services                   0       216 สม
          */
 //        String regex = "(^\\p{L}+[\\s?\\p{Alnum}]*?) (\\d+?) ([\\s?\\p{Alnum}]*?) (\\d+?) (\\p{all}*)";
-        String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";
+        String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_~!@#$%^&*()]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";
         Pattern pattern = Pattern.compile(regex, Pattern.UNICODE_CHARACTER_CLASS);
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
@@ -63,7 +65,27 @@ class TaskListParserImpl implements TaskListParser {
                     .withMemory(memoryUsed)
                     .build();
         } else {
-            throw new ParseException(String.format("Can't parse line representing a Task: %s", line), 0);
+            // FIXME : workaround - better to fix regex or convert _line to Unicode before parsing
+            // If failed to recognise Unicode task names
+            String tokens[] = line.split("\\s{2,}");
+            if (tokens.length != 4) {
+                throw new ParseException(String.format("Can't parse line representing a Task: %s", line), 0);
+            }
+            String taskName = tokens[0];
+            String pid = tokens[1].split("\\s")[0];
+            String memoryUsed = removeNonDigitChars(tokens[3]);
+            try {
+                // Check if pid and memory used are numbers
+                int i = Integer.valueOf(pid);
+                i = Integer.valueOf(memoryUsed);
+            } catch (NumberFormatException e) {
+                throw new ParseException(String.format("Can't parse line representing a Task: %s", line), 0);
+            }
+            taskDto = new TaskDto.Builder()
+                    .withName(taskName)
+                    .withPid(pid)
+                    .withMemory(memoryUsed)
+                    .build();
         }
         return taskDto;
     }
