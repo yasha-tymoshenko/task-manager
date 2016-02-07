@@ -57,7 +57,7 @@ public class TaskListParserImplTest {
 
         assertEquals("System", taskDto.getName());
         assertEquals("4", taskDto.getPid());
-        assertEquals("594912", taskDto.getMemory());
+        assertEquals(594912, (long) taskDto.getMemory());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TaskListParserImplTest {
 
         assertEquals("System Idle Process", taskDto.getName());
         assertEquals("0", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class TaskListParserImplTest {
 
         assertEquals("System       Idle     Process", taskDto.getName());
         assertEquals("0", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class TaskListParserImplTest {
 
         assertEquals("SystemTask007", taskDto.getName());
         assertEquals("0", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class TaskListParserImplTest {
 
         assertEquals("SystemTask007 specChar%&^@#!@#$%^&*()", taskDto.getName());
         assertEquals("0", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class TaskListParserImplTest {
 
         assertEquals("Назва задачі Українською777", taskDto.getName());
         assertEquals("1000000", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
 
     }
 
@@ -124,7 +124,7 @@ public class TaskListParserImplTest {
 
         assertEquals(" ??? ??? ? ??", taskDto.getName());
         assertEquals("1000000", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TaskListParserImplTest {
 
         assertEquals("9823949234", taskDto.getName());
         assertEquals("0", taskDto.getPid());
-        assertEquals("4", taskDto.getMemory());
+        assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test(expected = ParseException.class)
@@ -158,9 +158,8 @@ public class TaskListParserImplTest {
         String processNumberTwo_System = _taskListOut.get(4);
         TaskDto taskDto = parser.parseLine(processNumberTwo_System);
         assertNotNull(taskDto);
-        assertEquals("594912", taskDto.getMemory());
+        assertEquals(594912, (long) taskDto.getMemory());
     }
-
 
 
     //TODO remove this test (needed to test regex only)

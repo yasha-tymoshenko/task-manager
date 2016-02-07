@@ -1,7 +1,6 @@
 package com.tymoshenko.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 import java.util.Locale;
 
@@ -17,7 +16,7 @@ public class TaskDto {
     public static class Builder {
         private String name;
         private String pid;
-        private String memory;
+        private long memory;
 
         /**
          *
@@ -37,7 +36,7 @@ public class TaskDto {
             return this;
         }
 
-        public Builder withMemory(String memory) {
+        public Builder withMemory(long memory) {
             this.memory = memory;
             return this;
         }
@@ -46,18 +45,18 @@ public class TaskDto {
     //================= Instance fileds and methods =================
     private StringProperty name;
     private StringProperty pid;
-    private StringProperty memory;
+    private LongProperty memory;
 
     // Private bu intent - use the Builder instead
     private TaskDto(Builder builder) {
         this.name = new SimpleStringProperty(builder.name);
         this.pid = new SimpleStringProperty(builder.pid);
-        this.memory = new SimpleStringProperty(builder.memory);
+        this.memory = new SimpleLongProperty(builder.memory);
     }
 
     @Override
     public String toString() {
-        return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name.get(), pid.get(), Integer.valueOf(memory.get()));
+        return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name.get(), pid.get(), memory.get());
     }
 
     public String getName() {
@@ -68,7 +67,7 @@ public class TaskDto {
         return pid.get();
     }
 
-    public String getMemory() {
+    public Long getMemory() {
         return memory.get();
     }
 
@@ -80,11 +79,11 @@ public class TaskDto {
         return pid;
     }
 
-    public StringProperty memoryProperty() {
+    public LongProperty memoryProperty() {
         return memory;
     }
 
-    public void setMemory(String memory) {
+    public void setMemory(long memory) {
         this.memory.set(memory);
     }
 }

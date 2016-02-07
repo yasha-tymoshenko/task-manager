@@ -5,6 +5,7 @@ package com.tymoshenko;/**
 
 import com.tymoshenko.controller.TaskManager;
 import com.tymoshenko.controller.task_monitor.TaskMonitor;
+import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.view.TaskManagerController;
 import javafx.application.Application;
@@ -98,6 +99,7 @@ public class MainApp extends Application {
     }
 
     public void groupTasksByName() {
-        taskList.setAll(taskManager.taskListCollapseDuplicates(taskList));
+        List<TaskDto> taskList = taskManager.taskListCollapseDuplicates(this.taskList);
+        this.taskList.setAll(taskList);
     }
 }

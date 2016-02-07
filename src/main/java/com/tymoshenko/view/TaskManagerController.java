@@ -29,7 +29,7 @@ public class TaskManagerController {
     private TableColumn<TaskDto, String> pidColumn;
 
     @FXML
-    private TableColumn<TaskDto, String> memoryUsedColumn;
+    private TableColumn<TaskDto, Number> memoryUsedColumn;
 
     @FXML
     private CheckBox groupByNameCheckBox;

@@ -45,17 +45,17 @@ public class TaskMonitorImplTest {
         TaskDto duplicate1 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("1")
-                .withMemory("1")
+                .withMemory(1)
                 .build();
         TaskDto duplicate2 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("2")
-                .withMemory("2")
+                .withMemory(2)
                 .build();
         TaskDto duplicate3 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("3")
-                .withMemory("3")
+                .withMemory(3)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(duplicate1, duplicate2, duplicate3);
 
@@ -65,7 +65,7 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(0);
         assertEquals("Wrong name", duplicatedName, collapsedDuplicate.getName());
         assertEquals("Wrong pid", "1", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "6", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 6L, (long) collapsedDuplicate.getMemory());
     }
 
     @Test
@@ -74,22 +74,22 @@ public class TaskMonitorImplTest {
         TaskDto distinct = new TaskDto.Builder()
                 .withName("aaaaaaa")
                 .withPid("01")
-                .withMemory("1000")
+                .withMemory(1000)
                 .build();
         TaskDto duplicate1 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("1")
-                .withMemory("1")
+                .withMemory(1)
                 .build();
         TaskDto duplicate2 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("2")
-                .withMemory("2")
+                .withMemory(2)
                 .build();
         TaskDto duplicate3 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("3")
-                .withMemory("3")
+                .withMemory(3)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(distinct, duplicate1, duplicate2, duplicate3);
 
@@ -99,7 +99,7 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(1);
         assertEquals("Wrong name", duplicatedName, collapsedDuplicate.getName());
         assertEquals("Wrong pid", "1", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "6", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 6, (long) collapsedDuplicate.getMemory());
     }
 
     @Test
@@ -108,22 +108,22 @@ public class TaskMonitorImplTest {
         TaskDto distinct = new TaskDto.Builder()
                 .withName("zzzzzzzz")
                 .withPid("01")
-                .withMemory("1000")
+                .withMemory(1000)
                 .build();
         TaskDto duplicate1 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("1")
-                .withMemory("1")
+                .withMemory(1)
                 .build();
         TaskDto duplicate2 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("2")
-                .withMemory("2")
+                .withMemory(2)
                 .build();
         TaskDto duplicate3 = new TaskDto.Builder()
                 .withName(duplicatedName)
                 .withPid("3")
-                .withMemory("3")
+                .withMemory(3)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(duplicate1, duplicate2, duplicate3, distinct);
 
@@ -133,7 +133,7 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(0);
         assertEquals("Wrong name", duplicatedName, collapsedDuplicate.getName());
         assertEquals("Wrong pid", "1", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "6", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 6, (long) collapsedDuplicate.getMemory());
     }
 
     @Test
@@ -143,37 +143,37 @@ public class TaskMonitorImplTest {
         TaskDto distinct = new TaskDto.Builder()
                 .withName("zzzzzzzz")
                 .withPid("01")
-                .withMemory("1000")
+                .withMemory(1000)
                 .build();
         TaskDto duplicate1 = new TaskDto.Builder()
                 .withName(duplicatedName1)
                 .withPid("1")
-                .withMemory("1")
+                .withMemory(1)
                 .build();
         TaskDto duplicate2 = new TaskDto.Builder()
                 .withName(duplicatedName1)
                 .withPid("2")
-                .withMemory("2")
+                .withMemory(2)
                 .build();
         TaskDto duplicate3 = new TaskDto.Builder()
                 .withName(duplicatedName1)
                 .withPid("3")
-                .withMemory("3")
+                .withMemory(3)
                 .build();
         TaskDto duplicate4 = new TaskDto.Builder()
                 .withName(duplicatedName2)
                 .withPid("1")
-                .withMemory("10")
+                .withMemory(10)
                 .build();
         TaskDto duplicate5 = new TaskDto.Builder()
                 .withName(duplicatedName2)
                 .withPid("2")
-                .withMemory("20")
+                .withMemory(20)
                 .build();
         TaskDto duplicate6 = new TaskDto.Builder()
                 .withName(duplicatedName2)
                 .withPid("3")
-                .withMemory("30")
+                .withMemory(30)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(duplicate1, duplicate2, duplicate4, duplicate3, distinct, duplicate6, duplicate5);
 
@@ -183,12 +183,12 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(0);
         assertEquals("Wrong name", duplicatedName1, collapsedDuplicate.getName());
         assertEquals("Wrong pid", "1", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "6", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 6, (long) collapsedDuplicate.getMemory());
 
         collapsedDuplicate = collapsedList.get(1);
         assertEquals("Wrong name", duplicatedName2, collapsedDuplicate.getName());
         assertEquals("Wrong pid", "1", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "60", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 60, (long) collapsedDuplicate.getMemory());
 
     }
 
@@ -197,7 +197,7 @@ public class TaskMonitorImplTest {
         TaskDto distinct = new TaskDto.Builder()
                 .withName("zzzzzzzz")
                 .withPid("01")
-                .withMemory("1000")
+                .withMemory(1000)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(distinct);
 
@@ -207,7 +207,7 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(0);
         assertEquals("Wrong name", "zzzzzzzz", collapsedDuplicate.getName());
         assertEquals("Wrong pid", "01", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "1000", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 1000, (long) collapsedDuplicate.getMemory());
     }
 
     @Test
@@ -215,12 +215,12 @@ public class TaskMonitorImplTest {
         TaskDto one = new TaskDto.Builder()
                 .withName("zzzzzzzz")
                 .withPid("01")
-                .withMemory("1000")
+                .withMemory(1000)
                 .build();
         TaskDto two = new TaskDto.Builder()
                 .withName("aaa")
                 .withPid("02")
-                .withMemory("200")
+                .withMemory(200)
                 .build();
         List<TaskDto> taskDtoList = newArrayList(one, two);
 
@@ -230,12 +230,12 @@ public class TaskMonitorImplTest {
         TaskDto collapsedDuplicate = collapsedList.get(0);
         assertEquals("Wrong name", "aaa", collapsedDuplicate.getName());
         assertEquals("Wrong pid", "02", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "200", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 200, (long) collapsedDuplicate.getMemory());
 
         collapsedDuplicate = collapsedList.get(1);
         assertEquals("Wrong name", "zzzzzzzz", collapsedDuplicate.getName());
         assertEquals("Wrong pid", "01", collapsedDuplicate.getPid());
-        assertEquals("Wrong memory", "1000", collapsedDuplicate.getMemory());
+        assertEquals("Wrong memory", 1000, (long) collapsedDuplicate.getMemory());
     }
 
     @Test(expected = IllegalArgumentException.class)

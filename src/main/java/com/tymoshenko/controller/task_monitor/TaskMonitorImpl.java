@@ -38,15 +38,15 @@ public class TaskMonitorImpl implements TaskMonitor {
         TaskDto prev = taskDtoList.get(0);
         int duplicatesIndex = 0;
         duplicates.add(duplicatesIndex, prev);
-        long totalMemory = (long) Integer.valueOf(prev.getMemory());
+        long totalMemory = prev.getMemory();
         for (int i = 1; i < taskDtoList.size(); i++) {
             TaskDto current = taskDtoList.get(i);
             if (prev.getName().equalsIgnoreCase(current.getName())) {
-                totalMemory += Integer.valueOf(current.getMemory());
-                duplicates.get(duplicatesIndex).setMemory(Long.toString(totalMemory));
+                totalMemory += current.getMemory();
+                duplicates.get(duplicatesIndex).setMemory(totalMemory);
             } else {
                 prev = current;
-                totalMemory = (long) Integer.valueOf(current.getMemory());
+                totalMemory = current.getMemory();
                 duplicates.add(++duplicatesIndex, current);
             }
         }

@@ -25,12 +25,14 @@ public class TaskManagerImpl implements TaskManager {
 
     public List<TaskDto> taskList() {
         this.taskList = taskMonitor.taskList();
-        this.taskList.sort(new NameAscendingComparator());
+        this.taskList.sort(new MemoryUsedDescendingComparator());
         return taskList;
     }
 
     public List<TaskDto> taskListCollapseDuplicates(List<TaskDto> taskList) {
-        return taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
+        List<TaskDto> result = taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
+        result.sort(new MemoryUsedDescendingComparator());
+        return result;
     }
 
     private void makeSureTaskListExists() {

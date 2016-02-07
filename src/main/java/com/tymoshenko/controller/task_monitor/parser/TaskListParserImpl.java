@@ -4,11 +4,7 @@ import com.tymoshenko.model.TaskDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -62,7 +58,7 @@ class TaskListParserImpl implements TaskListParser {
             taskDto = new TaskDto.Builder()
                     .withName(taskName)
                     .withPid(pid)
-                    .withMemory(memoryUsed)
+                    .withMemory(Integer.valueOf(memoryUsed))
                     .build();
         } else {
             // FIXME : workaround - better to fix regex or convert _line to Unicode before parsing
@@ -84,7 +80,7 @@ class TaskListParserImpl implements TaskListParser {
             taskDto = new TaskDto.Builder()
                     .withName(taskName)
                     .withPid(pid)
-                    .withMemory(memoryUsed)
+                    .withMemory(Integer.valueOf(memoryUsed))
                     .build();
         }
         return taskDto;

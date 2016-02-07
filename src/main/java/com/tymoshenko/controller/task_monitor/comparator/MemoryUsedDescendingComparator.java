@@ -17,8 +17,6 @@ public class MemoryUsedDescendingComparator implements Comparator<TaskDto> {
      * Sorting order: Z..A.
      */
     public int compare(TaskDto first, TaskDto second) {
-        Integer memoryUsedFirst = Integer.valueOf(first.getMemory());
-        Integer memoryUsedSecond = Integer.valueOf(second.getMemory());
-        return memoryUsedSecond - memoryUsedFirst;
+        return second.getMemory().compareTo(first.getMemory());
     }
 }
