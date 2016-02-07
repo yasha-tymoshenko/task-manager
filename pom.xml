@@ -5,11 +5,31 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tymoshenko</groupId>
-    <artifactId>task-manager</artifactId>
+    <artifactId>task-manager-tymoshenko-yakiv</artifactId>
+    <name>task-manager-tymoshenko-yakiv</name>
+
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <organization>
+        <name>Yakiv Tymoshenko for Nanga Systems LTD</name>
+    </organization>
+
+    <properties>
+        <slf4j.version>1.6.1</slf4j.version>
+    </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.2.0</version>
+                <configuration>
+                    <mainClass>com.tymoshenko.MainApp</mainClass>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
