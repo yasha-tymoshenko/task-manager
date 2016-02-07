@@ -1,6 +1,7 @@
 package com.tymoshenko.view;
 
 import com.tymoshenko.MainApp;
+import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -9,6 +10,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 
 /**
@@ -56,6 +60,32 @@ public class TaskManagerController {
         } else {
             mainApp.refreshTaskList();
         }
+    }
+
+    @FXML
+    private void handleExport() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show save file dialog
+        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+            // Make sure it has the correct extension
+            if (!file.getPath().endsWith(".xml")) {
+                file = new File(file.getPath() + ".xml");
+            }
+            mainApp.export(file, ExportFormat.XML);
+        }
+    }
+
+    @FXML
+    private void handleExit() {
+        System.exit(0);
     }
 
     public void setMainApp(MainApp mainApp) {

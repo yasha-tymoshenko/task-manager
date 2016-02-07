@@ -35,17 +35,18 @@ class TaskListParserImpl implements TaskListParser {
         return taskList;
     }
 
+    // TODO simpler way : use tasklist /fo csv format -> will parse out in csv
     TaskDto parseLine(String line) throws ParseException {
         TaskDto taskDto;
          /* We expect the line to be in the following format:
          (1) Name (2) PID <space> Session_Name (3) Session_Number (4) Memory_Used <space> Memory_Unit
          e.g.:
 
-            Имя образа                     PID Имя сессии          № сеанса       Память
+            пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ                     PID пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ          пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ       пїЅпїЅпїЅпїЅпїЅпїЅ
             ========================= ======== ================ =========== ============
-            System Idle Process              0 Services                   0         4 КБ
-            System                           4 Services                   0   594 912 КБ
-            smss.exe                       420 Services                   0       216 КБ
+            System Idle Process              0 Services                   0         4 пїЅпїЅ
+            System                           4 Services                   0   594пїЅ912 пїЅпїЅ
+            smss.exe                       420 Services                   0       216 пїЅпїЅ
          */
 //        String regex = "(^\\p{L}+[\\s?\\p{Alnum}]*?) (\\d+?) ([\\s?\\p{Alnum}]*?) (\\d+?) (\\p{all}*)";
         String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_~!@#$%^&*()]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";

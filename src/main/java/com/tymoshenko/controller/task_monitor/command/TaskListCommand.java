@@ -12,18 +12,20 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
+ * TODO : support different command line args like "/fo csv"
+ * TODO : use java.lang.ProcessBuilder
  * Executes win32//tasklist.
  * The result is a formattes list of running processes.
  *
  * Example output:
- *        Имя образа                     PID Имя сессии          № сеанса       Память
+ *        пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ                     PID пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ          пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ       пїЅпїЅпїЅпїЅпїЅпїЅ
  *        ========================= ======== ================ =========== ============
- *        System Idle Process              0 Services                   0         4 КБ
- *        System                           4 Services                   0   587 732 КБ
- *        smss.exe                       420 Services                   0       216 КБ
- *        csrss.exe                      588 Services                   0     1 444 КБ
- *        csrss.exe                      680 Console                    1     5 744 КБ
- *        wininit.exe                    704 Services                   0       716 КБ
+ *        System Idle Process              0 Services                   0         4 пїЅпїЅ
+ *        System                           4 Services                   0   587пїЅ732 пїЅпїЅ
+ *        smss.exe                       420 Services                   0       216 пїЅпїЅ
+ *        csrss.exe                      588 Services                   0     1пїЅ444 пїЅпїЅ
+ *        csrss.exe                      680 Console                    1     5пїЅ744 пїЅпїЅ
+ *        wininit.exe                    704 Services                   0       716 пїЅпїЅ
  *
  * @author Yakiv Tymoshenko
  * @since 29.01.2016

@@ -1,13 +1,20 @@
 package com.tymoshenko.model;
 
-import javafx.beans.property.*;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
+import javax.xml.bind.annotation.*;
 import java.util.Locale;
 
 /**
  * @author Yakiv Tymoshenko
  * @since 29.01.2016
  */
+@XmlRootElement(name = "task")
+@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlType(propOrder = {"name", "pid", "memory"})
 public class TaskDto {
 
     /**
@@ -47,6 +54,10 @@ public class TaskDto {
     private StringProperty pid;
     private LongProperty memory;
 
+    // Private constructor needed by JAXB
+    private TaskDto() {
+    }
+
     // Private bu intent - use the Builder instead
     private TaskDto(Builder builder) {
         this.name = new SimpleStringProperty(builder.name);
@@ -59,14 +70,17 @@ public class TaskDto {
         return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name.get(), pid.get(), memory.get());
     }
 
+    @XmlElement(name = "name")
     public String getName() {
         return name.get();
     }
 
+    @XmlElement(name = "pid")
     public String getPid() {
         return pid.get();
     }
 
+    @XmlElement(name = "memory")
     public Long getMemory() {
         return memory.get();
     }

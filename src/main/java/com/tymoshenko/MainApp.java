@@ -4,8 +4,10 @@ package com.tymoshenko;/**
  */
 
 import com.tymoshenko.controller.TaskManager;
+import com.tymoshenko.controller.export.Exporter;
 import com.tymoshenko.controller.task_monitor.TaskMonitor;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
+import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.view.TaskManagerController;
 import javafx.application.Application;
@@ -24,7 +26,9 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -38,6 +42,7 @@ public class MainApp extends Application {
 
     private ApplicationContext ctx;
     private TaskManager taskManager;
+    private Exporter exporter;
     private ObservableList<TaskDto> taskList;
 
     public static void main(String[] args) {
@@ -50,12 +55,29 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("Task Manager");
 
         setIcon();
-
         initSpringContext();
 
         taskList = FXCollections.observableArrayList(taskManager.taskList());
 
         initRootLayout();
+    }
+
+    public void refreshTaskList() {
+        taskList.setAll(taskManager.taskList());
+    }
+
+    public void groupTasksByName() {
+        List<TaskDto> taskList = taskManager.taskListCollapseDuplicates(this.taskList);
+        this.taskList.setAll(taskList);
+    }
+
+    public void export(File exportTo, ExportFormat exportFormat) {
+        try {
+            exporter.export(new ArrayList<>(taskList), exportTo);
+        } catch (Exception e) {
+            LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
+            // TODO show Dialog
+        }
     }
 
     private void setIcon() {
@@ -71,6 +93,7 @@ public class MainApp extends Application {
     private void initSpringContext() {
         this.ctx = new AnnotationConfigApplicationContext(MainApp.class);
         taskManager = ctx.getBean(TaskManager.class);
+        exporter = ctx.getBean(Exporter.class);
     }
 
     private void initRootLayout() {
@@ -94,12 +117,9 @@ public class MainApp extends Application {
         return taskList;
     }
 
-    public void refreshTaskList() {
-        taskList.setAll(taskManager.taskList());
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 
-    public void groupTasksByName() {
-        List<TaskDto> taskList = taskManager.taskListCollapseDuplicates(this.taskList);
-        this.taskList.setAll(taskList);
-    }
+
 }

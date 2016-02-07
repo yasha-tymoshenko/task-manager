@@ -41,10 +41,10 @@ into a XML file abiding by the following scheme:
 The application shall utilize a SaveFileDialog form (or something equivalent)
 to give the user a method to choose the filename and location of the new xml file.
 
-9
+10  
 The application shall have a function to re-import the saved XML file and compare the contents
 to the data shown in the graphical user interface. Any changes shall be shown in the GUI.
 
-10
+11
 The application shall provide a function that exports the gathered data into Microsoft Excel
 and generate a chart about the memory usage of tasks.

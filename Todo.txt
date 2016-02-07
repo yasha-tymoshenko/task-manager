@@ -1,0 +1,31 @@
+1. Clarify, what is:
+The application shall provide a manner of handling different OS language settings
+which might affect the result of the “tasklist” command.
+    - Locale?
+    - Which system settings affect tasklist output?
+    - Security settings, rights to execute tasklist for different users?
+
+~2. Export to XML file. Use SaveFileDialog.
+
+3. Import XML. Show imported on UI
+
+4. Compare 2 task lists (current and imported). Highlight differences.
+
+5. Export task list to excel.
+
+6. Build graphic in excel.
+
+7. Display excel inside the UI [optional].
+
+8. Format long 12334594959885 -> 1,23 GB.
+
+9. Sorting in table columns should work (broken for PID).
+
+10. GUI best practices. Refine UI looks.
+
+11. Allow setting tasklist parameters through the UI.
+
+12. Measure, how long time spent in each process.
+
+13. Better OOP design. Minimize dependencies btwn modules and API visibility.
+
