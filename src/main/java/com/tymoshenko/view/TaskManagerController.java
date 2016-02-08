@@ -30,7 +30,7 @@ public class TaskManagerController {
     private TableColumn<TaskDto, String> nameColumn;
 
     @FXML
-    private TableColumn<TaskDto, String> pidColumn;
+    private TableColumn<TaskDto, Number> pidColumn;
 
     @FXML
     private TableColumn<TaskDto, Number> memoryUsedColumn;

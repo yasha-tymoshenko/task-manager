@@ -28,15 +28,15 @@ public class TaskListParserImplTest {
     // Processes = 21, but siz = 24. 3 redundant lines for formatting (e.g. col names).
     private static final List<String> _taskListOut = Arrays.asList(
             "\n",
-            "Имя образа                     PID Имя сессии          № сеанса       Память\n",
+            "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ                     PID пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ          пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ       пїЅпїЅпїЅпїЅпїЅпїЅ\n",
             "========================= ======== ================ =========== ============\n",
-            "System Idle Process              0 Services                   0         4 КБ\n",
-            "System                           4 Services                   0   594 912 КБ\n",
-            "smss.exe                       420 Services                   0       216 КБ\n",
-            "csrss.exe                      588 Services                   0     1 428 КБ\n",
-            "Назва задачі Українською777              1000000 Сервіси                   400000000         4 КБ\n",
-            "csrss.exe                      680 Console                    1     5 832 КБ\n",
-            "services.exe                   752 Services                   0     3 908 КБ\n"
+            "System Idle Process              0 Services                   0         4 пїЅпїЅ\n",
+            "System                           4 Services                   0   594пїЅ912 пїЅпїЅ\n",
+            "smss.exe                       420 Services                   0       216 пїЅпїЅ\n",
+            "csrss.exe                      588 Services                   0     1пїЅ428 пїЅпїЅ\n",
+            "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ777              1000000 пїЅпїЅпїЅпїЅпїЅпїЅ                   400000000         4 пїЅпїЅ\n",
+            "csrss.exe                      680 Console                    1     5пїЅ832 пїЅпїЅ\n",
+            "services.exe                   752 Services                   0     3пїЅ908 пїЅпїЅ\n"
     );
 
     @Autowired
@@ -51,96 +51,96 @@ public class TaskListParserImplTest {
 
     @Test
     public void parseLine_ShouldFormValidTaskDto() throws Exception {
-        final String _line = "System                           4 Services                   0   594 912 КБ\n";
+        final String _line = "System                           4 Services                   0   594пїЅ912 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("System", taskDto.getName());
-        assertEquals("4", taskDto.getPid());
+        assertEquals(4, (long) taskDto.getPid());
         assertEquals(594912, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseTaskNameWithSpaces() throws Exception {
-        final String _line = "System Idle Process              0 Services                   0         4 КБ\n";
+        final String _line = "System Idle Process              0 Services                   0         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("System Idle Process", taskDto.getName());
-        assertEquals("0", taskDto.getPid());
+        assertEquals(0, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseTaskNameWithManySpaces() throws Exception {
-        final String _line = "System       Idle     Process              0 Services                   0         4 КБ\n";
+        final String _line = "System       Idle     Process              0 Services                   0         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("System       Idle     Process", taskDto.getName());
-        assertEquals("0", taskDto.getPid());
+        assertEquals(0, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseTaskNameWithDigits() throws Exception {
-        final String _line = "SystemTask007              0 Services                   0         4 КБ\n";
+        final String _line = "SystemTask007              0 Services                   0         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("SystemTask007", taskDto.getName());
-        assertEquals("0", taskDto.getPid());
+        assertEquals(0, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseTaskNameWithSpecialChars() throws Exception {
-        final String _line = "SystemTask007 specChar%&^@#!@#$%^&*()              0 Services                   0         4 КБ\n";
+        final String _line = "SystemTask007 specChar%&^@#!@#$%^&*()              0 Services                   0         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("SystemTask007 specChar%&^@#!@#$%^&*()", taskDto.getName());
-        assertEquals("0", taskDto.getPid());
+        assertEquals(0, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseUkrainianName() throws Exception {
-        final String _line = "Назва задачі Українською777              1000000 Сервіси                   400000000         4 КБ\n";
+        final String _line = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ777              1000000 пїЅпїЅпїЅпїЅпїЅпїЅ                   400000000         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
-        assertEquals("Назва задачі Українською777", taskDto.getName());
-        assertEquals("1000000", taskDto.getPid());
+        assertEquals("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ777", taskDto.getName());
+        assertEquals(1000000, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
 
     }
 
     @Test
     public void parseLine_ShouldParseChineseName() throws Exception {
-        final String _line = " ??? ??? ? ??              1000000 ???                   400000000         4 КБ\n";
+        final String _line = " ??? ??? ? ??              1000000 ???                   400000000         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals(" ??? ??? ? ??", taskDto.getName());
-        assertEquals("1000000", taskDto.getPid());
+        assertEquals(1000000, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test
     public void parseLine_ShouldParseWhenNameIsDigitsOnly() throws Exception {
-        final String _line = "9823949234              0 Services                   0         4 КБ\n";
+        final String _line = "9823949234              0 Services                   0         4 пїЅпїЅ\n";
 
         TaskDto taskDto = parser.parseLine(_line);
 
         assertEquals("9823949234", taskDto.getName());
-        assertEquals("0", taskDto.getPid());
+        assertEquals(0, (long) taskDto.getPid());
         assertEquals(4, (long) taskDto.getMemory());
     }
 
     @Test(expected = ParseException.class)
     public void parseLine_ShouldThrowException_WhenLineIsNotTask() throws Exception {
-        final String _line = "Имя образа                     PID Имя сессии          № сеанса       Память\n";
+        final String _line = "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ                     PID пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ          пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ       пїЅпїЅпїЅпїЅпїЅпїЅ\n";
 
         parser.parseLine(_line);
     }
@@ -165,7 +165,7 @@ public class TaskListParserImplTest {
     //TODO remove this test (needed to test regex only)
 //    @Test
     public void testName() throws Exception {
-//        "smss.exe                       420 Services                   0       216 КБ\n",
+//        "smss.exe                       420 Services                   0       216 пїЅпїЅ\n",
         final String _line = _taskListOut.get(5);
         String regex = "(^\\p{L}+[\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) ([\\s?\\p{Alnum}.,_]*?) (\\d+[.,_]?) (\\p{all}*)";
 

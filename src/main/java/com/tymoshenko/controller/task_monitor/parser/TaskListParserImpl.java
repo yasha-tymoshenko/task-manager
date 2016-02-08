@@ -58,8 +58,8 @@ class TaskListParserImpl implements TaskListParser {
             String memoryUsed = removeNonDigitChars(matcher.group(5).trim());
             taskDto = new TaskDto.Builder()
                     .withName(taskName)
-                    .withPid(pid)
-                    .withMemory(Integer.valueOf(memoryUsed))
+                    .withPid(Long.valueOf(pid))
+                    .withMemory(Long.valueOf(memoryUsed))
                     .build();
         } else {
             // FIXME : workaround - better to fix regex or convert _line to Unicode before parsing
@@ -80,8 +80,8 @@ class TaskListParserImpl implements TaskListParser {
             }
             taskDto = new TaskDto.Builder()
                     .withName(taskName)
-                    .withPid(pid)
-                    .withMemory(Integer.valueOf(memoryUsed))
+                    .withPid(Long.valueOf(pid))
+                    .withMemory(Long.valueOf(memoryUsed))
                     .build();
         }
         return taskDto;

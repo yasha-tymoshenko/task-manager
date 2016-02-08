@@ -22,7 +22,7 @@ public class TaskDto {
      */
     public static class Builder {
         private String name;
-        private String pid;
+        private long pid;
         private long memory;
 
         /**
@@ -38,7 +38,7 @@ public class TaskDto {
             return this;
         }
 
-        public Builder withPid(String pid) {
+        public Builder withPid(long pid) {
             this.pid = pid;
             return this;
         }
@@ -51,7 +51,7 @@ public class TaskDto {
 
     //================= Instance fileds and methods =================
     private StringProperty name;
-    private StringProperty pid;
+    private LongProperty pid;
     private LongProperty memory;
 
     // Private constructor needed by JAXB
@@ -61,7 +61,7 @@ public class TaskDto {
     // Private bu intent - use the Builder instead
     private TaskDto(Builder builder) {
         this.name = new SimpleStringProperty(builder.name);
-        this.pid = new SimpleStringProperty(builder.pid);
+        this.pid = new SimpleLongProperty(builder.pid);
         this.memory = new SimpleLongProperty(builder.memory);
     }
 
@@ -76,7 +76,7 @@ public class TaskDto {
     }
 
     @XmlElement(name = "pid")
-    public String getPid() {
+    public Long getPid() {
         return pid.get();
     }
 
@@ -89,7 +89,7 @@ public class TaskDto {
         return name;
     }
 
-    public StringProperty pidProperty() {
+    public LongProperty pidProperty() {
         return pid;
     }
 

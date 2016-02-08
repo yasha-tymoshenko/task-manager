@@ -21,37 +21,37 @@ public class XmlExporterTest {
     public void testName() throws Exception {
         TaskDto distinct = new TaskDto.Builder()
                 .withName("zzzzzzzz")
-                .withPid("01")
+                .withPid(1)
                 .withMemory(1000)
                 .build();
         TaskDto duplicate1 = new TaskDto.Builder()
                 .withName("duplicatedName1")
-                .withPid("1")
+                .withPid(1)
                 .withMemory(1)
                 .build();
         TaskDto duplicate2 = new TaskDto.Builder()
                 .withName("duplicatedName1")
-                .withPid("2")
+                .withPid(2)
                 .withMemory(2)
                 .build();
         TaskDto duplicate3 = new TaskDto.Builder()
                 .withName("duplicatedName1")
-                .withPid("3")
+                .withPid(3)
                 .withMemory(3)
                 .build();
         TaskDto duplicate4 = new TaskDto.Builder()
                 .withName("duplicatedName2")
-                .withPid("1")
+                .withPid(1)
                 .withMemory(10)
                 .build();
         TaskDto duplicate5 = new TaskDto.Builder()
                 .withName("duplicatedName2")
-                .withPid("2")
+                .withPid(2)
                 .withMemory(20)
                 .build();
         TaskDto duplicate6 = new TaskDto.Builder()
                 .withName("duplicatedName2")
-                .withPid("3")
+                .withPid(3)
                 .withMemory(30)
                 .build();
 
