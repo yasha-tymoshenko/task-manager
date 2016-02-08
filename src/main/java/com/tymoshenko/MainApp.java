@@ -99,7 +99,7 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/TaskManager.fxml"));
+            loader.setLocation(MainApp.class.getResource("/resources/fxml/TaskManager.fxml"));
             rootLayout = (VBox) loader.load();
 
             TaskManagerController controller = loader.getController();
