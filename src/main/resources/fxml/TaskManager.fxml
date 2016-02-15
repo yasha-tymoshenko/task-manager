@@ -9,12 +9,11 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-
 <BorderPane prefHeight="741.0" prefWidth="567.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tymoshenko.view.TaskManagerController">
    <center>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="831.0" prefWidth="632.0" BorderPane.alignment="CENTER">
       <children>
-            <TabPane prefHeight="815.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane id="tabPane" fx:id="tabPane" prefHeight="815.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
                 <Tab closable="false" text="Running tasks">
                      <content>

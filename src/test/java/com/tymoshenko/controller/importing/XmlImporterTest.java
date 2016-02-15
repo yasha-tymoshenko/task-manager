@@ -21,19 +21,18 @@ import static org.junit.Assert.*;
  * @since 15.02.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = MainApp.class)
+@ContextConfiguration(locations = "/resources/beans.xml")
 public class XmlImporterTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(XmlImporterTest.class);
 
     @Autowired
     private Importer importer;
-//    private final String _importFilePath = "/importing/import.xml";
-    private final String _importFilePath = "C:\\Projects\\task-manager\\src\\test\\resources\\importing\\import.xml";
+    private final String _importFilePath = "/importing/import.xml";
 
     @Test
     public void importShouldImportListOfTaskDtoFromFile() throws Exception {
-        File file = new File(_importFilePath);
+        File file = loadFile(_importFilePath);
 
         List<TaskDto> taskList = importer.doImport(file);
 
@@ -51,7 +50,7 @@ public class XmlImporterTest {
     }
 
     private File loadFile(String path) throws FileNotFoundException {
-        File file = new File(_importFilePath);
+        File file = new File(this.getClass().getResource(_importFilePath).getFile());
         if (!file.exists()) {
             throw new FileNotFoundException("File not found: " + path);
         }

@@ -6,6 +6,7 @@ import com.tymoshenko.controller.task_monitor.parser.TaskListParser;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * @author Yakiv Tymoshenko
  * @since 29.01.2016
  */
-@Component
+@Service
 public class TaskMonitorImpl implements TaskMonitor {
 
     @Autowired

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
  * @since 29.01.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = MainApp.class)
+@ContextConfiguration(locations = "/resources/beans.xml")
 public class TaskListParserImplTest {
 
     // Processes = 21, but siz = 24. 3 redundant lines for formatting (e.g. col names).

@@ -6,10 +6,7 @@ import com.tymoshenko.model.TaskDto;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,6 +19,9 @@ import java.io.File;
 public class TaskManagerController {
 
     private MainApp mainApp;
+
+    @FXML
+    private TabPane tabPane;
 
     @FXML
     private TableView<TaskDto> taskListTable;
@@ -64,6 +64,7 @@ public class TaskManagerController {
 
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+        mainApp.setTaskManagerController(this);
 
         ObservableList<TaskDto> taskList = mainApp.getTaskList();
         taskListTable.setItems(taskList);
@@ -73,4 +74,7 @@ public class TaskManagerController {
         });
     }
 
+    public TabPane getTabPane() {
+        return tabPane;
+    }
 }

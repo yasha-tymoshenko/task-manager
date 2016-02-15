@@ -5,6 +5,7 @@ package com.tymoshenko;/**
 
 import com.tymoshenko.controller.TaskManager;
 import com.tymoshenko.controller.exporting.Exporter;
+import com.tymoshenko.controller.importing.Importer;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.view.MenuBarController;
@@ -13,34 +14,38 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
-@ComponentScan("com.tymoshenko")
 public class MainApp extends Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(MainApp.class);
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private TaskManagerController taskManagerController;
 
-    private ApplicationContext ctx;
+    private ApplicationContext applicationContext;
+
     private TaskManager taskManager;
     private Exporter exporter;
+
     private ObservableList<TaskDto> taskList;
 
     public static void main(String[] args) {
@@ -70,13 +75,40 @@ public class MainApp extends Application {
         this.taskList.setAll(taskList);
     }
 
-    public void export(File exportTo, ExportFormat exportFormat) {
+    public void doExport(File exportTo, ExportFormat exportFormat) {
         try {
             exporter.export(new ArrayList<>(taskList), exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
         }
+    }
+
+    public void doImport(File xmlFile) {
+        Tab newTab = new Tab(xmlFile.getPath(), createImportedTabContent(xmlFile));
+
+        TabPane tabPane = taskManagerController.getTabPane();
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+    }
+
+    private Node createImportedTabContent(File importedFile) {
+        Importer importer = (Importer) applicationContext.getBean("xmlImporter");
+        List<TaskDto> taskList = importer.doImport(importedFile);
+        ObservableList<TaskDto> taskListObservable = FXCollections.observableArrayList(taskList);
+
+        TableView<TaskDto> table = new TableView<>(taskListObservable);
+        TableColumn<TaskDto, String> nameColumn = new TableColumn<>("Name");
+        TableColumn<TaskDto, Number> pidColumn = new TableColumn<>("PID");
+        TableColumn<TaskDto, Number> memoryColumn = new TableColumn<>("Memory");
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        pidColumn.setCellValueFactory(cellData -> cellData.getValue().pidProperty());
+        memoryColumn.setCellValueFactory(cellData -> cellData.getValue().memoryProperty());
+        table.getColumns().addAll(nameColumn, pidColumn, memoryColumn);
+
+        BorderPane tabRoot = new BorderPane();
+        tabRoot.setCenter(table);
+        return tabRoot;
     }
 
     private void setIcon() {
@@ -90,9 +122,9 @@ public class MainApp extends Application {
     }
 
     private void initSpringContext() {
-        this.ctx = new AnnotationConfigApplicationContext(MainApp.class);
-        taskManager = ctx.getBean(TaskManager.class);
-        exporter = ctx.getBean(Exporter.class);
+        applicationContext = new ClassPathXmlApplicationContext("/resources/beans.xml");
+        taskManager = applicationContext.getBean(TaskManager.class);
+        exporter = applicationContext.getBean(Exporter.class);
     }
 
     private void initRootLayout() {
@@ -133,5 +165,11 @@ public class MainApp extends Application {
         return primaryStage;
     }
 
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
 
+    public void setTaskManagerController(TaskManagerController taskManagerController) {
+        this.taskManagerController = taskManagerController;
+    }
 }

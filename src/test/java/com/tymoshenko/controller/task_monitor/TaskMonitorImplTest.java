@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
  * @since 29.01.2016
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = MainApp.class)
+@ContextConfiguration(locations = "/resources/beans.xml")
 public class TaskMonitorImplTest {
 
     @Autowired

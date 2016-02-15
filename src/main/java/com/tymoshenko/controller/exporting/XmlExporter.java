@@ -3,6 +3,7 @@ package com.tymoshenko.controller.exporting;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.model.TaskDtoList;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
