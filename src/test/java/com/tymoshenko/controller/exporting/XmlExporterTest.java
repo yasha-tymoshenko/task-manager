@@ -1,13 +1,11 @@
-package com.tymoshenko.controller.export;
+package com.tymoshenko.controller.exporting;
 
 import com.tymoshenko.model.TaskDto;
-import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.*;
 
 /**
  * @author Yakiv

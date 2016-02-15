@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tasks>
+    <task>
+        <name>idea64.exe</name>
+        <pid>7164</pid>
+        <memory>740108</memory>
+    </task>
+    <task>
+        <name>System</name>
+        <pid>4</pid>
+        <memory>481472</memory>
+    </task>
+    <task>
+        <name>JavaFX Scene Builder 2.0.</name>
+        <pid>7516</pid>
+        <memory>273748</memory>
+    </task>
+    <task>
+        <name>chrome.exe</name>
+        <pid>6220</pid>
+        <memory>159024</memory>
+    </task>
+</tasks>

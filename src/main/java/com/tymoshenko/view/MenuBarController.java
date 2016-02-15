@@ -37,6 +37,11 @@ public class MenuBarController {
     }
 
     @FXML
+    private void handleImport() {
+
+    }
+
+    @FXML
     private void handleExit() {
         System.exit(0);
     }

@@ -4,7 +4,7 @@ package com.tymoshenko;/**
  */
 
 import com.tymoshenko.controller.TaskManager;
-import com.tymoshenko.controller.export.Exporter;
+import com.tymoshenko.controller.exporting.Exporter;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.view.MenuBarController;
@@ -16,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

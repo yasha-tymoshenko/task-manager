@@ -50,9 +50,9 @@ public class TaskDto {
     }
 
     //================= Instance fileds and methods =================
-    private StringProperty name;
-    private LongProperty pid;
-    private LongProperty memory;
+    private StringProperty name = new SimpleStringProperty();
+    private LongProperty pid = new SimpleLongProperty();
+    private LongProperty memory = new SimpleLongProperty();
 
     // Private constructor needed by JAXB
     private TaskDto() {
@@ -60,9 +60,9 @@ public class TaskDto {
 
     // Private bu intent - use the Builder instead
     private TaskDto(Builder builder) {
-        this.name = new SimpleStringProperty(builder.name);
-        this.pid = new SimpleLongProperty(builder.pid);
-        this.memory = new SimpleLongProperty(builder.memory);
+        this.name.set(builder.name);
+        this.pid.set(builder.pid);
+        this.memory.set(builder.memory);
     }
 
     @Override
@@ -85,6 +85,18 @@ public class TaskDto {
         return memory.get();
     }
 
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
+    public void setPid(Long pid) {
+        this.pid.set(pid);
+    }
+
+    public void setMemory(Long memory) {
+        this.memory.set(memory);
+    }
+
     public StringProperty nameProperty() {
         return name;
     }
@@ -95,9 +107,5 @@ public class TaskDto {
 
     public LongProperty memoryProperty() {
         return memory;
-    }
-
-    public void setMemory(long memory) {
-        this.memory.set(memory);
     }
 }
