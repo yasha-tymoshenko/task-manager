@@ -66,6 +66,27 @@ public class TaskDto {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TaskDto taskDto = (TaskDto) o;
+
+        if (!getName().equals(taskDto.getName())) return false;
+        if (!getPid().equals(taskDto.getPid())) return false;
+        return getMemory().equals(taskDto.getMemory());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getPid().hashCode();
+        result = 31 * result + getMemory().hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "%-30s %10s %,15d", name.get(), pid.get(), memory.get());
     }

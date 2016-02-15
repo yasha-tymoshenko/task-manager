@@ -6,8 +6,10 @@ package com.tymoshenko;/**
 import com.tymoshenko.controller.TaskManager;
 import com.tymoshenko.controller.exporting.Exporter;
 import com.tymoshenko.controller.importing.Importer;
+import com.tymoshenko.model.DiffSign;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
+import com.tymoshenko.model.TaskDtoDiff;
 import com.tymoshenko.view.MenuBarController;
 import com.tymoshenko.view.TaskManagerController;
 import javafx.application.Application;
@@ -30,8 +32,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MainApp extends Application {
 
@@ -97,14 +98,84 @@ public class MainApp extends Application {
         List<TaskDto> taskList = importer.doImport(importedFile);
         ObservableList<TaskDto> taskListObservable = FXCollections.observableArrayList(taskList);
 
-        TableView<TaskDto> table = new TableView<>(taskListObservable);
-        TableColumn<TaskDto, String> nameColumn = new TableColumn<>("Name");
-        TableColumn<TaskDto, Number> pidColumn = new TableColumn<>("PID");
-        TableColumn<TaskDto, Number> memoryColumn = new TableColumn<>("Memory");
-        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        pidColumn.setCellValueFactory(cellData -> cellData.getValue().pidProperty());
-        memoryColumn.setCellValueFactory(cellData -> cellData.getValue().memoryProperty());
-        table.getColumns().addAll(nameColumn, pidColumn, memoryColumn);
+        // Compare current running tasks and imported
+        Map<String, TaskDto> leftMap = new HashMap<>();
+        // Make sure is grouped by name (no duplicate names in the list)
+        for (TaskDto taskDto : this.taskList) {
+            leftMap.put(taskDto.getName(), taskDto);
+        }
+
+        Map<String, TaskDto> rightMap = new HashMap<>();
+        for (TaskDto taskDto : taskList) {
+            rightMap.put(taskDto.getName(), taskDto);
+        }
+
+        Set<String> allTaskNames = new HashSet<>(leftMap.keySet());
+        allTaskNames.addAll(rightMap.keySet());
+
+        List<TaskDtoDiff> taskDtoDiffList = new ArrayList<>();
+        TaskDto emptyTask = new TaskDto.Builder()
+                .withName("-")
+                .withPid(0)
+                .withMemory(0)
+                .build();
+        for (String taskName : allTaskNames) {
+            TaskDto left = emptyTask;
+            TaskDto right = emptyTask;
+            if (leftMap.containsKey(taskName)) {
+                left = leftMap.get(taskName);
+            }
+            if (rightMap.containsKey(taskName)) {
+                right = rightMap.get(taskName);
+            }
+            // Determine DiffSign
+            DiffSign diffSign;
+            if (left.equals(emptyTask)) {
+                diffSign = DiffSign.REMOVED;
+            } else if (right.equals(emptyTask)) {
+                diffSign = DiffSign.ADDED;
+            } else if (left.equals(right)) {
+                diffSign = DiffSign.NO_CHANGES;
+            } else {
+                diffSign = DiffSign.CHANGED;
+            }
+            TaskDtoDiff taskDtoDiff = new TaskDtoDiff(left, diffSign, right);
+            taskDtoDiffList.add(taskDtoDiff);
+        }
+
+
+        taskDtoDiffList.sort(new Comparator<TaskDtoDiff>() {
+            @Override
+            public int compare(TaskDtoDiff first, TaskDtoDiff second) {
+                // Sort by Left.Memory in descending order
+                return second.getLeft().getMemory().compareTo(first.getLeft().getMemory());
+            }
+        });
+        ObservableList<TaskDtoDiff> taskDtoDiffListObservable = FXCollections.observableArrayList(taskDtoDiffList);
+        TableView<TaskDtoDiff> table = new TableView<>(taskDtoDiffListObservable);
+
+        // Left task
+        TableColumn<TaskDtoDiff, String> leftNameColumn = new TableColumn<>("Name");
+        TableColumn<TaskDtoDiff, Number> leftPidColumn = new TableColumn<>("PID");
+        TableColumn<TaskDtoDiff, Number> leftMemoryColumn = new TableColumn<>("Memory");
+        leftNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().nameProperty());
+        leftPidColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().pidProperty());
+        leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryProperty());
+
+        // Diff sign
+        TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Name");
+        diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().signProperty());
+
+        // Right task
+        TableColumn<TaskDtoDiff, String> rightNameColumn = new TableColumn<>("Name");
+        TableColumn<TaskDtoDiff, Number> rightPidColumn = new TableColumn<>("PID");
+        TableColumn<TaskDtoDiff, Number> rightMemoryColumn = new TableColumn<>("Memory");
+        rightNameColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().nameProperty());
+        rightPidColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().pidProperty());
+        rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryProperty());
+
+        table.getColumns().addAll(leftNameColumn, leftPidColumn, leftMemoryColumn,
+                diffSignColumn, rightNameColumn, rightPidColumn, rightMemoryColumn);
 
         BorderPane tabRoot = new BorderPane();
         tabRoot.setCenter(table);
