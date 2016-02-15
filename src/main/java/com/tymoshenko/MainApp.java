@@ -9,6 +9,7 @@ import com.tymoshenko.controller.task_monitor.TaskMonitor;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
+import com.tymoshenko.view.MenuBarController;
 import com.tymoshenko.view.TaskManagerController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class MainApp extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(MainApp.class);
 
     private Stage primaryStage;
-    private VBox rootLayout;
+    private BorderPane rootLayout;
 
     private ApplicationContext ctx;
     private TaskManager taskManager;
@@ -60,6 +63,7 @@ public class MainApp extends Application {
         taskList = FXCollections.observableArrayList(taskManager.taskList());
 
         initRootLayout();
+        showTaskList();
     }
 
     public void refreshTaskList() {
@@ -99,17 +103,30 @@ public class MainApp extends Application {
     private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("/resources/fxml/TaskManager.fxml"));
-            rootLayout = (VBox) loader.load();
+            loader.setLocation(MainApp.class.getResource("/resources/fxml/RootLayout.fxml"));
+            rootLayout = loader.load();
 
-            TaskManagerController controller = loader.getController();
+            MenuBarController controller = loader.getController();
             controller.setMainApp(this);
 
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            LOG.error(String.format("Failed to load root layout. Error: %s", e.getMessage()));
+            LOG.error(String.format("Failed to load root layout. %s", e.getMessage()));
+        }
+    }
+
+    private void showTaskList() {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/resources/fxml/TaskManager.fxml"));
+            VBox taskListOverview = loader.load();
+            rootLayout.setCenter(taskListOverview);
+
+            TaskManagerController controller = loader.getController();
+            controller.setMainApp(this);
+        } catch (IOException e) {
+            LOG.error(String.format("Failed to load TaskManager.fxml. %s", e.getMessage()));
         }
     }
 

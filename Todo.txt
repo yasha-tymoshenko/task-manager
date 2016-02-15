@@ -11,26 +11,25 @@ which might affect the result of the “tasklist” command.
 2.3 Error dialog
 
 ~3. Import XML. Show imported on UI
-+3.1 Use standard dir layout for JavaFX
-3.2  Refactor - use separate RootLayout,fxml for MenuBar
+   +3.1 Use standard dir layout for JavaFX
+   ~3.2 Refactor - use separate RootLayout.fxml for MenuBar
+    3.3 Screen for diff with imported
+    3.4 Controller for import
+    3.5 Highlight differences
 
-4. Compare 2 task lists (current and imported). Highlight differences.
+4. Export task list to excel.
 
-5. Export task list to excel.
+5. Build graphic in excel.
 
-6. Build graphic in excel.
+6. Display excel inside the UI [optional].
 
-7. Display excel inside the UI [optional].
+7. Format long 12334594959885 -> 1,23 GB.
 
-8. Format long 12334594959885 -> 1,23 GB.
++8. Sorting in table columns should work (broken for PID).
 
-+9. Sorting in table columns should work (broken for PID).
+9. GUI best practices. Refine UI looks.
 
-10. GUI best practices. Refine UI looks.
+10. Allow setting tasklist parameters through the UI.
 
-11. Allow setting tasklist parameters through the UI.
-
-12. Measure, how long time spent in each process.
-
-13. Better OOP design. Minimize dependencies btwn modules and API visibility.
+11. Better OOP design. Minimize dependencies btwn modules and API visibility.
 
