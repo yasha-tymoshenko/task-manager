@@ -163,7 +163,7 @@ public class MainApp extends Application {
         leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryProperty());
 
         // Diff sign
-        TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Name");
+        TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Diff");
         diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().signProperty());
 
         // Right task
