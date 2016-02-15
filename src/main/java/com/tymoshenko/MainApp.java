@@ -5,8 +5,6 @@ package com.tymoshenko;/**
 
 import com.tymoshenko.controller.TaskManager;
 import com.tymoshenko.controller.export.Exporter;
-import com.tymoshenko.controller.task_monitor.TaskMonitor;
-import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.view.MenuBarController;
@@ -22,13 +20,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
