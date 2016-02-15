@@ -116,7 +116,7 @@ public class MainApp extends Application {
     private void showTaskList() {
         try {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/resources/fxml/TaskManager.fxml"));
-            VBox taskListOverview = loader.load();
+            BorderPane taskListOverview = loader.load();
             rootLayout.setCenter(taskListOverview);
 
             TaskManagerController controller = loader.getController();

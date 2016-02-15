@@ -12,7 +12,7 @@ which might affect the result of the “tasklist” command.
 
 ~3. Import XML. Show imported on UI
    +3.1 Use standard dir layout for JavaFX
-   ~3.2 Refactor - use separate RootLayout.fxml for MenuBar
+   +3.2 Refactor - use separate RootLayout.fxml for MenuBar
     3.3 Screen for diff with imported
     3.4 Controller for import
     3.5 Highlight differences

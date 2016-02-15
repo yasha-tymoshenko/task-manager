@@ -9,54 +9,63 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tymoshenko.view.TaskManagerController">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" VBox.vgrow="ALWAYS">
+
+<BorderPane prefHeight="741.0" prefWidth="567.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.tymoshenko.view.TaskManagerController">
+   <center>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="831.0" prefWidth="632.0" BorderPane.alignment="CENTER">
       <children>
-            <SplitPane dividerPositions="0.94655704008222" layoutX="501.0" layoutY="361.0" orientation="VERTICAL" prefHeight="800.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <items>
-                <AnchorPane prefHeight="100.0" prefWidth="160.0">
-                     <children>
-                <TableView id="taskListTable" fx:id="taskListTable" editable="true" stylesheets="@../styles/styles.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                  <columns>
-                    <TableColumn id="nameColumn" fx:id="nameColumn" maxWidth="-1.0" minWidth="280.0" prefWidth="-1.0" text="Name" />
-                    <TableColumn id="pidColumn" fx:id="pidColumn" maxWidth="-1.0" minWidth="80.0" prefWidth="-1.0" style=" " styleClass="custom-align" text="PID" />
-                              <TableColumn id="memoryUsedColumn" fx:id="memoryUsedColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="198.0" styleClass="custom-align" text="Memory used" />
-                  </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                </TableView>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </AnchorPane>
-                <AnchorPane prefHeight="55.0" prefWidth="1198.0">
-                     <children>
-                        <ToolBar layoutX="229.0" layoutY="14.0" prefHeight="49.0" prefWidth="1198.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane prefHeight="815.0" prefWidth="619.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab closable="false" text="Running tasks">
+                     <content>
+                        <SplitPane dividerPositions="0.94655704008222" orientation="VERTICAL" prefHeight="800.0" prefWidth="600.0">
                           <items>
-                            <Button mnemonicParsing="false" onAction="#handleShowTasks" text="Show tasks" />
-                              <CheckBox fx:id="groupByNameCheckBox" mnemonicParsing="false" onAction="#handleGroupByName" text="Group by name" />
-                              <HBox>
+                            <AnchorPane prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <Label text="Find" />
-                                    <TextField />
+                            <TableView id="taskListTable" fx:id="taskListTable" editable="true" prefHeight="741.0" prefWidth="619.0" stylesheets="@../styles/styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <columns>
+                                <TableColumn id="nameColumn" fx:id="nameColumn" maxWidth="-1.0" minWidth="280.0" prefWidth="-1.0" text="Name" />
+                                <TableColumn id="pidColumn" fx:id="pidColumn" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" style=" " styleClass="custom-align" text="PID" />
+                                          <TableColumn id="memoryUsedColumn" fx:id="memoryUsedColumn" maxWidth="-1.0" minWidth="160.0" prefWidth="-1.0" styleClass="custom-align" text="Memory used" />
+                              </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                            </TableView>
                                  </children>
-                              </HBox>
-                              <HBox>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </AnchorPane>
+                            <AnchorPane prefHeight="0.0" prefWidth="600.0">
                                  <children>
-                                    <Label text="Tasks:" />
-                                    <Label fx:id="tasksNumberLabel" />
+                                    <ToolBar layoutX="229.0" layoutY="14.0" prefHeight="35.0" prefWidth="567.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <items>
+                                        <Button mnemonicParsing="false" onAction="#handleShowTasks" text="Show tasks" />
+                                          <CheckBox fx:id="groupByNameCheckBox" mnemonicParsing="false" onAction="#handleGroupByName" text="Group by name" />
+                                          <HBox>
+                                             <children>
+                                                <Label text="Tasks:" />
+                                                <Label fx:id="tasksNumberLabel" />
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <Label text="Find" />
+                                                <TextField />
+                                             </children>
+                                          </HBox>
+                                      </items>
+                                    </ToolBar>
                                  </children>
-                              </HBox>
+                              </AnchorPane>
                           </items>
-                        </ToolBar>
-                     </children>
-                  </AnchorPane>
-              </items>
-            </SplitPane>
+                        </SplitPane>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
       </children>
     </AnchorPane>
-  </children>
-</VBox>
+   </center>
+</BorderPane>
