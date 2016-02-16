@@ -96,6 +96,19 @@
             <version>4.2.4.RELEASE</version>
         </dependency>
 
+        <!-- Generating Excel charts -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.12</version>
+        </dependency>
+
         <!-- Utility -->
         <dependency>
             <groupId>com.google.guava</groupId>

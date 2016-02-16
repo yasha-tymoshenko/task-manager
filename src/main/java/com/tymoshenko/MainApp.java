@@ -25,12 +25,29 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import org.apache.poi.ss.usermodel.charts.AxisCrosses;
+import org.apache.poi.ss.usermodel.charts.AxisPosition;
+import org.apache.poi.ss.usermodel.charts.ChartAxis;
+import org.apache.poi.ss.usermodel.charts.ChartDataSource;
+import org.apache.poi.ss.usermodel.charts.ChartLegend;
+import org.apache.poi.ss.usermodel.charts.DataSources;
+import org.apache.poi.ss.usermodel.charts.LegendPosition;
+import org.apache.poi.ss.usermodel.charts.LineChartData;
+import org.apache.poi.ss.usermodel.charts.ValueAxis;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -88,7 +105,10 @@ public class MainApp extends Application {
 
     public void doExportToExcel(File exportTo, ExportFormat exportFormat) {
         try {
-            exporterExcel.export(new ArrayList<>(taskList), exportTo);
+            ArrayList<TaskDto> taskList = new ArrayList<>(this.taskList);
+//            exporterExcel.export(taskList, exportTo);
+
+            generateChart(taskList, exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to Excel file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
@@ -234,6 +254,70 @@ public class MainApp extends Application {
             controller.setMainApp(this);
         } catch (IOException e) {
             LOG.error(String.format("Failed to load TaskManager.fxml. %s", e.getMessage()));
+        }
+    }
+
+    private void generateChart(List<TaskDto> taskList, File excelFile) throws IOException, InvalidFormatException {
+//        Workbook wb = WorkbookFactory.create(excelFile);
+        Workbook wb = new XSSFWorkbook();
+        Sheet sheet = wb.createSheet("Memory usage");
+        final int _rows_number = taskList.size();
+        final int _cols_number = 3;
+
+
+        Row row;
+        Cell cell;
+        TaskDto taskDto;
+        for (int rowIndex = 0; rowIndex < _rows_number; rowIndex++) {
+            row = sheet.createRow(rowIndex);
+            taskDto = taskList.get(rowIndex);
+
+            // Name
+            cell = row.createCell(0);
+            cell.setCellValue(taskDto.getName());
+
+            // PID
+            cell = row.createCell(1);
+            cell.setCellValue(taskDto.getPid());
+
+            // Memory
+            cell = row.createCell(2);
+            cell.setCellValue(taskDto.getMemory());
+        }
+
+        Drawing drawing = sheet.createDrawingPatriarch();
+        // TODO verify
+        ClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 5, 10, 15);
+
+        Chart chart = drawing.createChart(anchor);
+        ChartLegend legend = chart.getOrCreateLegend();
+        legend.setPosition(LegendPosition.TOP_RIGHT);
+
+        LineChartData data = chart.getChartDataFactory().createLineChartData();
+
+        // Use a category axis for the bottom axis.
+        ChartAxis bottomAxis = chart.getChartAxisFactory().createCategoryAxis(AxisPosition.BOTTOM);
+        ValueAxis leftAxis = chart.getChartAxisFactory().createValueAxis(AxisPosition.LEFT);
+        leftAxis.setCrosses(AxisCrosses.AUTO_ZERO);
+
+        ChartDataSource<Number> xs = DataSources.fromNumericCellRange(sheet, new CellRangeAddress(0, 0, 0, 2));
+        ChartDataSource<Number> ys1 = DataSources.fromNumericCellRange(sheet, new CellRangeAddress(1, 1, 0, 2));
+        ChartDataSource<Number> ys2 = DataSources.fromNumericCellRange(sheet, new CellRangeAddress(2, 2, 0, 2));
+
+
+        data.addSeries(xs, ys1);
+        data.addSeries(xs, ys2);
+
+        chart.plot(data, bottomAxis, leftAxis);
+
+        // Write the output to a file
+        try {
+            FileOutputStream fileOut = new FileOutputStream(excelFile);
+            wb.write(fileOut);
+            wb.close();
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
