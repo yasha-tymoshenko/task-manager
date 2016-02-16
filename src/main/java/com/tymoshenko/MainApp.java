@@ -46,6 +46,7 @@ public class MainApp extends Application {
 
     private TaskManager taskManager;
     private Exporter exporter;
+    private Exporter exporterExcel;
 
     private ObservableList<TaskDto> taskList;
 
@@ -81,6 +82,15 @@ public class MainApp extends Application {
             exporter.export(new ArrayList<>(taskList), exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
+            // TODO show Dialog
+        }
+    }
+
+    public void doExportToExcel(File exportTo, ExportFormat exportFormat) {
+        try {
+            exporterExcel.export(new ArrayList<>(taskList), exportTo);
+        } catch (Exception e) {
+            LOG.error(String.format("Failed export to Excel file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
         }
     }
@@ -193,7 +203,8 @@ public class MainApp extends Application {
     private void initSpringContext() {
         applicationContext = new ClassPathXmlApplicationContext("/resources/beans.xml");
         taskManager = applicationContext.getBean(TaskManager.class);
-        exporter = applicationContext.getBean(Exporter.class);
+        exporter = (Exporter) applicationContext.getBean("xmlExporter");
+        exporterExcel = (Exporter) applicationContext.getBean("excelExporter");
     }
 
     private void initRootLayout() {

@@ -2,17 +2,12 @@ package com.tymoshenko.view;
 
 import com.tymoshenko.MainApp;
 import com.tymoshenko.model.ExportFormat;
-import com.tymoshenko.model.TaskDto;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * @author Yakiv Tymoshenko
@@ -35,6 +30,25 @@ public class MenuBarController {
                 file = new File(file.getPath() + ".xml");
             }
             mainApp.doExport(file, ExportFormat.XML);
+        }
+    }
+
+    @FXML
+    private void handleExportToExcel() {
+        // Show Save File Dialog
+        FileChooser fileChooser = new FileChooser();
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Microsoft Excel 97/2000/XP (.xls)", "*.xls");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+            // Make sure it has the correct extension
+            if (!file.getPath().endsWith(".xls")) {
+                file = new File(file.getPath() + ".xls");
+            }
+            mainApp.doExportToExcel(file, ExportFormat.Excel);
         }
     }
 
