@@ -144,14 +144,10 @@ public class MainApp extends Application {
         }
 
 
-        taskDtoDiffList.sort(new Comparator<TaskDtoDiff>() {
-            @Override
-            public int compare(TaskDtoDiff first, TaskDtoDiff second) {
-                Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
-                Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
-                // Sort by Left.Memory in descending order
-                return secondMaxMemory.compareTo(firstMaxMemory);
-            }
+        taskDtoDiffList.sort((first, second) -> {
+            Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
+            Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
+            return secondMaxMemory.compareTo(firstMaxMemory);
         });
         ObservableList<TaskDtoDiff> taskDtoDiffListObservable = FXCollections.observableArrayList(taskDtoDiffList);
         TableView<TaskDtoDiff> table = new TableView<>(taskDtoDiffListObservable);
