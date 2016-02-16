@@ -164,7 +164,7 @@ public class MainApp extends Application {
 
         // Diff sign
         TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Diff");
-        diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().signProperty());
+        diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().nameProperty());
 
         // Right task
         TableColumn<TaskDtoDiff, String> rightNameColumn = new TableColumn<>("Name");
