@@ -21,20 +21,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -53,7 +45,8 @@ public class MainApp extends Application {
     private ApplicationContext applicationContext;
 
     private TaskManager taskManager;
-    private Exporter exporter;
+    private Exporter exporterXml;
+    private Exporter exporterExcel;
 
     private ObservableList<TaskDto> taskList;
 
@@ -86,7 +79,7 @@ public class MainApp extends Application {
 
     public void doExport(File exportTo) {
         try {
-            exporter.export(new ArrayList<>(taskList), exportTo);
+            exporterXml.export(new ArrayList<>(taskList), exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
@@ -96,53 +89,10 @@ public class MainApp extends Application {
     public void doExportToExcel(File exportTo) {
         try {
             ArrayList<TaskDto> taskList = new ArrayList<>(this.taskList);
-            generateChart(taskList, exportTo);
+            exporterExcel.export(taskList, exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to Excel file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
-        }
-    }
-
-    private void generateChart(List<TaskDto> taskList, File excelFile) throws IOException, InvalidFormatException {
-        // Load Excel template with chart
-        File excelChartTemplate = new File(MainApp.class.getResource("/resources/excel/chart_template.xlt").getFile());
-        FileInputStream fileInputStream = new FileInputStream(excelChartTemplate);
-        // Using Excel 2003 format (*.xls)
-        Workbook wb = new HSSFWorkbook(fileInputStream);
-        Sheet sheet = wb.getSheet("Memory usage");
-        final int _rows_number = taskList.size();
-
-        // Copy taskList to Excel
-        Row row;
-        Cell cell;
-        TaskDto taskDto;
-        for (int rowIndex = 0; rowIndex < _rows_number; rowIndex++) {
-            row = sheet.createRow(rowIndex);
-            taskDto = taskList.get(rowIndex);
-
-            // Name
-            cell = row.createCell(0);
-            cell.setCellValue(taskDto.getName());
-
-            // PID
-            cell = row.createCell(1);
-            cell.setCellValue(taskDto.getPid());
-
-            // Memory
-            cell = row.createCell(2);
-            cell.setCellValue(taskDto.getMemory());
-        }
-
-        // Write Excel content to a file
-        try {
-            FileOutputStream fileOut = new FileOutputStream(excelFile);
-            wb.write(fileOut);
-            wb.close();
-            fileOut.flush();
-            fileOut.close();
-        } catch (IOException e) {
-            LOG.error(String.format("Error writting excel content to a file: %s. Error: %s", excelFile.getPath(), e.getMessage()));
-            // TODO show dialog
         }
     }
 
@@ -254,7 +204,8 @@ public class MainApp extends Application {
     private void initSpringContext() {
         applicationContext = new ClassPathXmlApplicationContext("/resources/beans.xml");
         taskManager = applicationContext.getBean(TaskManager.class);
-        exporter = (Exporter) applicationContext.getBean("xmlExporter");
+        exporterXml = (Exporter) applicationContext.getBean("xmlExporter");
+        exporterExcel = (Exporter) applicationContext.getBean("excelExporter");
     }
 
     private void initRootLayout() {
