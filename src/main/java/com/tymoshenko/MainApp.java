@@ -3,6 +3,9 @@ package com.tymoshenko;
 import com.tymoshenko.controller.TaskManager;
 import com.tymoshenko.controller.exporting.Exporter;
 import com.tymoshenko.controller.importing.Importer;
+import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
+import com.tymoshenko.controller.task_monitor.comparator.TaskDtoDiffLeftMemoryDescendingComparator;
+import com.tymoshenko.controller.task_monitor.comparator.TaskDtoDiffRightMemoryDescendingComparator;
 import com.tymoshenko.model.DiffSign;
 import com.tymoshenko.model.TaskDto;
 import com.tymoshenko.model.TaskDtoDiff;
@@ -51,6 +54,8 @@ public class MainApp extends Application {
     private Exporter exporterExcel;
 
     private ObservableList<TaskDto> taskList;
+    private boolean taskDiffLeftSortMemoryAscending = false;
+    private boolean taskDiffRightSortMemoryAscending = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -72,6 +77,14 @@ public class MainApp extends Application {
 
     public void refreshTaskList() {
         taskList.setAll(taskManager.taskList());
+    }
+
+    public void sortByMemory(Boolean ascending) {
+        if (ascending) {
+            taskList.sort(new MemoryUsedDescendingComparator().reversed());
+        } else {
+            taskList.sort(new MemoryUsedDescendingComparator());
+        }
     }
 
     public void groupTasksByName() {
@@ -181,6 +194,14 @@ public class MainApp extends Application {
         leftNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().nameProperty());
         leftPidColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().pidProperty());
         leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryHumanReadableProperty());
+        leftMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
+            if (taskDiffLeftSortMemoryAscending) {
+                taskDtoDiffListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator().reversed());
+            } else {
+                taskDtoDiffListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator());
+            }
+            taskDiffLeftSortMemoryAscending = !taskDiffLeftSortMemoryAscending;
+        });
 
         // Diff sign
         TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Diff");
@@ -189,10 +210,18 @@ public class MainApp extends Application {
         // Right task
         TableColumn<TaskDtoDiff, String> rightNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> rightPidColumn = new TableColumn<>("PID");
-        TableColumn<TaskDtoDiff, Number> rightMemoryColumn = new TableColumn<>("Memory");
+        TableColumn<TaskDtoDiff, String> rightMemoryColumn = new TableColumn<>("Memory");
         rightNameColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().nameProperty());
         rightPidColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().pidProperty());
-        rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryProperty());
+        rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryHumanReadableProperty());
+        rightMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
+            if (taskDiffRightSortMemoryAscending) {
+                taskDtoDiffListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator().reversed());
+            } else {
+                taskDtoDiffListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator());
+            }
+            taskDiffRightSortMemoryAscending = !taskDiffRightSortMemoryAscending;
+        });
 
         // Color highlight
         leftNameColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED));

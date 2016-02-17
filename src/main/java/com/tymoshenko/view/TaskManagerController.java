@@ -37,11 +37,17 @@ public class TaskManagerController {
     @FXML
     private Label tasksNumberLabel;
 
+    private boolean sortMemoryAscending = false;
+
     @FXML
     private void initialize() {
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         pidColumn.setCellValueFactory(cellData -> cellData.getValue().pidProperty());
         memoryUsedColumn.setCellValueFactory(cellData -> cellData.getValue().memoryHumanReadableProperty());
+        memoryUsedColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
+            mainApp.sortByMemory(sortMemoryAscending);
+            sortMemoryAscending = !sortMemoryAscending;
+        });
     }
 
     @FXML

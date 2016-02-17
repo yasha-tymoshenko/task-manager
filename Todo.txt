@@ -2,8 +2,8 @@
     + Export to XML always grouped by name
     + Export to Excel always grouped by name
     + Show tasks bttn shall check Checkbox "Group by name"
-2. Compare with imported: add visual color highlight.
-3. Format memory: long 12334594959885 -> 1,23 GB.
++2. Compare with imported: add visual color highlight.
++3. Format memory: long 12334594959885 -> 1,23 GB.
 +4. Error dialogs.
 +5. Add support for recent files.
 6. Localization. (Should work on any Windows).
