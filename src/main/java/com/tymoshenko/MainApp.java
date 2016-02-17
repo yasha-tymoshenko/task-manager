@@ -217,6 +217,8 @@ public class MainApp extends Application {
                 super.updateItem(item, empty);
 
                 TableRow<TaskDtoDiff> tableRow = getTableRow();
+                // Reset styles (e.g. for sorting)
+                setStyle("");
                 if (tableRow != null) {
                     TaskDtoDiff diff = tableRow.getItem();
                     if (item != null && !empty) {
@@ -241,7 +243,11 @@ public class MainApp extends Application {
                     }
                 }
             }
+
+
         };
+
+
     }
 
     private TableColumn<TaskDtoDiff, String> makeStringColumn(String columnName) {
