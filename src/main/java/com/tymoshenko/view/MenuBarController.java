@@ -9,12 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.util.prefs.Preferences;
 
 /**
  * @author Yakiv Tymoshenko
  * @since 15.02.2016
  */
 public class MenuBarController {
+
+    public static final String LAST_DIRECTORY = "lastDirectory";
 
     private static final Logger LOG = LoggerFactory.getLogger(MenuBarController.class);
 
@@ -30,6 +33,7 @@ public class MenuBarController {
             if (!file.getPath().endsWith(".xml")) {
                 file = new File(file.getPath() + ".xml");
             }
+            rememberDirectory(file);
             mainApp.doExport(file);
         }
     }
@@ -42,6 +46,7 @@ public class MenuBarController {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "Microsoft Excel 97/2000/XP (.xls)", "*.xls");
         fileChooser.getExtensionFilters().add(extFilter);
+        setInitialDirectory(fileChooser);
         File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
         if (file != null) {
@@ -49,6 +54,7 @@ public class MenuBarController {
             if (!file.getPath().endsWith(".xls")) {
                 file = new File(file.getPath() + ".xls");
             }
+            rememberDirectory(file);
             mainApp.doExportToExcel(file);
         }
     }
@@ -57,6 +63,9 @@ public class MenuBarController {
     private void handleImport() {
         // Open file dialog
         File file = xmlFileChooser().showOpenDialog(mainApp.getPrimaryStage());
+        if (file != null) {
+            rememberDirectory(file);
+        }
         mainApp.doImport(file);
     }
 
@@ -82,7 +91,24 @@ public class MenuBarController {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extFilter);
+        setInitialDirectory(fileChooser);
+
         return fileChooser;
+    }
+
+    private void rememberDirectory(File file) {
+        Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+        File dir = file.getParentFile();
+        preferences.put(LAST_DIRECTORY, dir.getPath());
+    }
+
+    private void setInitialDirectory(FileChooser fileChooser) {
+        Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+        String lastDirPath = preferences.get(LAST_DIRECTORY, null);
+        if (lastDirPath != null) {
+            File lastDir = new File(lastDirPath);
+            fileChooser.setInitialDirectory(lastDir);
+        }
     }
 
     public void setMainApp(MainApp mainApp) {
