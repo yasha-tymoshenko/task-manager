@@ -50,9 +50,9 @@ public class XmlImporterTest {
     }
 
     private File loadFile(String path) throws FileNotFoundException {
-        File file = new File(this.getClass().getResource(_importFilePath).getFile());
+        File file = new File(this.getClass().getResource(path).getFile());
         if (!file.exists()) {
-            throw new FileNotFoundException("File not found: " + path);
+            LOG.warn("File not found: " + file.getPath());
         }
         return file;
     }
