@@ -6,7 +6,6 @@ import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -31,19 +30,5 @@ public class TaskManagerImpl implements TaskManager {
         List<TaskDto> result = taskMonitor.collapseDuplicatesByNameAndAggregateMemoryUsed(this.taskList);
         result.sort(new MemoryUsedDescendingComparator());
         return result;
-    }
-
-    private void makeSureTaskListExists() {
-        if (this.taskList == null) {
-            taskList();
-        }
-    }
-
-    public void exportTaskList(File exportFile) {
-
-    }
-
-    public void importTaskList(File importFile) {
-
     }
 }

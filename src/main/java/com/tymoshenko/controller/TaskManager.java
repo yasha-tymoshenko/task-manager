@@ -2,7 +2,6 @@ package com.tymoshenko.controller;
 
 import com.tymoshenko.model.TaskDto;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -23,10 +22,4 @@ public interface TaskManager {
      * No duplicated task names.
      */
     List<TaskDto> taskListCollapseDuplicates(List<TaskDto> taskList);
-
-    //TODo : export to Excel should also generate a chart about used memory by each task
-    void exportTaskList(File exportFile);
-
-    // TODO : after import must compare current task list with the imported one (GUI)
-    void importTaskList(File importFile);
 }
