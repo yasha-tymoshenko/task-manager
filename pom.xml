@@ -27,6 +27,7 @@
                 <version>8.2.0</version>
                 <configuration>
                     <mainClass>com.tymoshenko.MainApp</mainClass>
+                    <additionalAppResources>${basedir}/target/classes/resources</additionalAppResources>
                 </configuration>
             </plugin>
 
@@ -45,21 +46,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.7</version>
                 <executions>
-                    <execution>
-                        <id>copy-fxml</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/classes/com/tymoshenko/view</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/java/com/tymoshenko/view</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>copy-resources</id>
                         <phase>validate</phase>

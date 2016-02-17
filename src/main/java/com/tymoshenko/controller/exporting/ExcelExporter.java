@@ -1,5 +1,6 @@
 package com.tymoshenko.controller.exporting;
 
+import com.tymoshenko.MainApp;
 import com.tymoshenko.model.TaskDto;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -41,10 +42,8 @@ public class ExcelExporter implements Exporter {
         HSSFWorkbook hssfWorkbook = null;
         try {
             // Load Excel template with chart
-            File excelChartTemplate = new File(ExcelExporter.class.getResource(EXCEL_CHART_TEMPLATE).getFile());
-            FileInputStream fileInputStream = new FileInputStream(excelChartTemplate);
             // Using Excel 2003 format (*.xls)
-            hssfWorkbook = new HSSFWorkbook(fileInputStream);
+            hssfWorkbook = new HSSFWorkbook(this.getClass().getResourceAsStream(EXCEL_CHART_TEMPLATE));
         } catch (IOException e) {
             LOG.error(String.format("Error creating Excel Workbook. Template file=%s. Error: %s", EXCEL_CHART_TEMPLATE, e.getMessage()));
             throw e;
