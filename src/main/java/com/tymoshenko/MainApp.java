@@ -14,12 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -83,8 +84,8 @@ public class MainApp extends Application {
             List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
             exporterXml.export(tasksGroupedByName, exportTo);
         } catch (Exception e) {
+            showExceptionDialog("Export to XML failed.", "File=" + exportTo.getPath(), e);
             LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
-            // TODO show Dialog
         }
     }
 
@@ -94,9 +95,43 @@ public class MainApp extends Application {
             List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
             exporterExcel.export(tasksGroupedByName, exportTo);
         } catch (Exception e) {
+            showExceptionDialog("Export to Excel failed.", "File=" + exportTo.getPath(), e);
             LOG.error(String.format("Failed export to Excel file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
-            // TODO show Dialog
         }
+    }
+
+    private void showExceptionDialog(String headerMessage, String mainMessage, Exception exception) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("ERROR");
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(mainMessage);
+
+        // Create expandable Exception.
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        String exceptionText = sw.toString();
+
+        Label label = new Label("The exception stacktrace was:");
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(label, 0, 0);
+        expContent.add(textArea, 0, 1);
+
+        // Set expandable Exception into the dialog pane.
+        alert.getDialogPane().setExpandableContent(expContent);
+
+        alert.showAndWait();
     }
 
     public void doImport(File xmlFile) {

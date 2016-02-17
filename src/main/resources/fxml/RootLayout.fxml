@@ -13,16 +13,17 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleExport" text="Export" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleExport" text="Export to XML" />
                   <MenuItem mnemonicParsing="false" onAction="#handleExportToExcel" text="Export to Microsoft Excel" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleImport" text="Import" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleImport" text="Import from XML" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
             </items>
           </Menu>
         </menus>

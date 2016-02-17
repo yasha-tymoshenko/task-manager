@@ -2,10 +2,12 @@ package com.tymoshenko.view;
 
 import com.tymoshenko.MainApp;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.File;
 
 /**
@@ -61,6 +63,17 @@ public class MenuBarController {
     @FXML
     private void handleExit() {
         System.exit(0);
+    }
+
+    @FXML
+    private void handleAbout() {
+        Alert aboutDialog = new Alert(Alert.AlertType.INFORMATION);
+
+        aboutDialog.setTitle("Task Manager for Windows");
+        aboutDialog.setHeaderText(null);
+        aboutDialog.setContentText("Application to prove JavaFX skills.\nAuthor: Yakiv Tymoshenko.");
+
+        aboutDialog.showAndWait();
     }
 
     private FileChooser xmlFileChooser() {

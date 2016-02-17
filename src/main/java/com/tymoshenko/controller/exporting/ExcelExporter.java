@@ -24,12 +24,12 @@ public class ExcelExporter implements Exporter {
     private static final Logger LOG = LoggerFactory.getLogger(ExcelExporter.class);
     public static final String EXCEL_CHART_TEMPLATE = "/resources/excel/chart_template.xlt";
 
-    public File export(List<TaskDto> taskList, File file) throws IOException, JAXBException {
+    public File export(List<TaskDto> taskList, File file) throws Exception {
         generateChart(taskList, file);
         return file;
     }
 
-    private void generateChart(List<TaskDto> taskList, File excelFile) {
+    private void generateChart(List<TaskDto> taskList, File excelFile) throws Exception {
         Workbook wb = loadWorkbookFromTemplate();
 
         copyTaskListToChartData(taskList, wb);
@@ -37,7 +37,7 @@ public class ExcelExporter implements Exporter {
         flushWorkbookToFile(excelFile, wb);
     }
 
-    private Workbook loadWorkbookFromTemplate() {
+    private Workbook loadWorkbookFromTemplate() throws IOException {
         HSSFWorkbook hssfWorkbook = null;
         try {
             // Load Excel template with chart
@@ -47,6 +47,7 @@ public class ExcelExporter implements Exporter {
             hssfWorkbook = new HSSFWorkbook(fileInputStream);
         } catch (IOException e) {
             LOG.error(String.format("Error creating Excel Workbook. Template file=%s. Error: %s", EXCEL_CHART_TEMPLATE, e.getMessage()));
+            throw e;
         }
         return hssfWorkbook;
     }
@@ -75,7 +76,7 @@ public class ExcelExporter implements Exporter {
         }
     }
 
-    private void flushWorkbookToFile(File excelFile, Workbook wb) {
+    private void flushWorkbookToFile(File excelFile, Workbook wb) throws IOException {
         try {
             FileOutputStream fileOut = new FileOutputStream(excelFile);
             wb.write(fileOut);
@@ -84,6 +85,7 @@ public class ExcelExporter implements Exporter {
             fileOut.close();
         } catch (IOException e) {
             LOG.error(String.format("Error writting excel content to a file: %s. Error: %s", excelFile.getPath(), e.getMessage()));
+            throw e;
         }
     }
 
