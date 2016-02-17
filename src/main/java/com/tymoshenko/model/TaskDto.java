@@ -54,6 +54,13 @@ public class TaskDto {
     private LongProperty pid = new SimpleLongProperty();
     private LongProperty memory = new SimpleLongProperty();
 
+    // Copy constructor
+    public TaskDto(TaskDto taskDto) {
+        this.name.set(taskDto.getName());
+        this.pid.set(taskDto.getPid());
+        this.memory.set(taskDto.getMemory());
+    }
+
     // Private constructor needed by JAXB
     private TaskDto() {
     }

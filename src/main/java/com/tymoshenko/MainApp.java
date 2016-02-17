@@ -74,6 +74,7 @@ public class MainApp extends Application {
     }
 
     public void groupTasksByName() {
+        refreshTaskList();
         List<TaskDto> taskList = taskManager.taskListCollapseDuplicates(this.taskList);
         this.taskList.setAll(taskList);
     }
@@ -115,7 +116,6 @@ public class MainApp extends Application {
     private Node createImportedTabContent(File importedFile) {
         Importer importer = (Importer) applicationContext.getBean("xmlImporter");
         List<TaskDto> taskList = importer.doImport(importedFile);
-        ObservableList<TaskDto> taskListObservable = FXCollections.observableArrayList(taskList);
 
         // Compare current running tasks and imported
         Map<String, TaskDto> leftMap = new HashMap<>();
