@@ -79,7 +79,9 @@ public class MainApp extends Application {
 
     public void doExport(File exportTo) {
         try {
-            exporterXml.export(new ArrayList<>(taskList), exportTo);
+            // FIXME maybe make it depend on checkbox "Group by name"
+            List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
+            exporterXml.export(tasksGroupedByName, exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to XML file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
@@ -88,8 +90,9 @@ public class MainApp extends Application {
 
     public void doExportToExcel(File exportTo) {
         try {
-            ArrayList<TaskDto> taskList = new ArrayList<>(this.taskList);
-            exporterExcel.export(taskList, exportTo);
+            // FIXME maybe make it depend on checkbox "Group by name"
+            List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
+            exporterExcel.export(tasksGroupedByName, exportTo);
         } catch (Exception e) {
             LOG.error(String.format("Failed export to Excel file=%s. Exception: %s", exportTo.getPath(), e.getMessage()));
             // TODO show Dialog
@@ -111,8 +114,9 @@ public class MainApp extends Application {
 
         // Compare current running tasks and imported
         Map<String, TaskDto> leftMap = new HashMap<>();
-        // Make sure is grouped by name (no duplicate names in the list)
-        for (TaskDto taskDto : this.taskList) {
+        // FIXME maybe make it depend on checkbox "Group by name"
+        List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
+        for (TaskDto taskDto : tasksGroupedByName) {
             leftMap.put(taskDto.getName(), taskDto);
         }
 

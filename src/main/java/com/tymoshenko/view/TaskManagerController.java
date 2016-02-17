@@ -46,11 +46,15 @@ public class TaskManagerController {
 
     @FXML
     private void handleShowTasks() {
-        mainApp.refreshTaskList();
+        refreshTaskList();
     }
 
     @FXML
     private void handleGroupByName() {
+        refreshTaskList();
+    }
+
+    private void refreshTaskList() {
         if (groupByNameCheckBox.isSelected()) {
             mainApp.groupTasksByName();
         } else {
