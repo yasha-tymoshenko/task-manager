@@ -129,65 +129,14 @@ public class MainApp extends Application {
 
     private Node createImportedTabContent(File importedFile) {
         Importer importer = (Importer) applicationContext.getBean("xmlImporter");
-        List<TaskDto> taskList = importer.doImport(importedFile);
-
-        // Compare current running tasks and imported
-        Map<String, TaskDto> leftMap = new HashMap<>();
-        // FIXME maybe make it depend on checkbox "Group by name"
-        List<TaskDto> tasksGroupedByName = taskManager.taskListCollapseDuplicates(this.taskList);
-        for (TaskDto taskDto : tasksGroupedByName) {
-            leftMap.put(taskDto.getName(), taskDto);
-        }
-
-        Map<String, TaskDto> rightMap = new HashMap<>();
-        for (TaskDto taskDto : taskList) {
-            rightMap.put(taskDto.getName(), taskDto);
-        }
-
-        Set<String> allTaskNames = new HashSet<>(leftMap.keySet());
-        allTaskNames.addAll(rightMap.keySet());
-
-        // Merge current and imported lists
-        List<TaskDtoDiff> taskDtoDiffList = new ArrayList<>();
-        TaskDto emptyTask = new TaskDto.Builder()
-                .withName("-")
-                .withPid(0)
-                .withMemory(0)
-                .build();
-        for (String taskName : allTaskNames) {
-            TaskDto left = emptyTask;
-            TaskDto right = emptyTask;
-            if (leftMap.containsKey(taskName)) {
-                left = leftMap.get(taskName);
-            }
-            if (rightMap.containsKey(taskName)) {
-                right = rightMap.get(taskName);
-            }
-            // Determine DiffSign
-            DiffSign diffSign;
-            if (left.equals(emptyTask)) {
-                diffSign = DiffSign.REMOVED;
-            } else if (right.equals(emptyTask)) {
-                diffSign = DiffSign.ADDED;
-            } else if (left.equals(right)) {
-                diffSign = DiffSign.NO_CHANGES;
-            } else {
-                diffSign = DiffSign.CHANGED;
-            }
-            TaskDtoDiff taskDtoDiff = new TaskDtoDiff(left, diffSign, right);
-            taskDtoDiffList.add(taskDtoDiff);
-        }
-
-        taskDtoDiffList.sort((first, second) -> {
-            Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
-            Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
-            return secondMaxMemory.compareTo(firstMaxMemory);
-        });
-        ObservableList<TaskDtoDiff> taskDtoDiffListObservable = FXCollections.observableArrayList(taskDtoDiffList);
-        TableView<TaskDtoDiff> table = new TableView<>(taskDtoDiffListObservable);
+        List<TaskDto> importedTaskList = importer.doImport(importedFile);
+        List<TaskDto> currentTaskList = taskManager.taskListCollapseDuplicates(this.taskList);
+        ObservableList<TaskDtoDiff> mergedTaskListObservable = mergeTaskLists(currentTaskList, importedTaskList);
 
         // Display merged tasklist in table
-        // Left task
+        TableView<TaskDtoDiff> table = new TableView<>(mergedTaskListObservable);
+
+        // Left task columns
         TableColumn<TaskDtoDiff, String> leftNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> leftPidColumn = new TableColumn<>("PID");
         TableColumn<TaskDtoDiff, String> leftMemoryColumn = new TableColumn<>("Memory");
@@ -196,18 +145,18 @@ public class MainApp extends Application {
         leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryHumanReadableProperty());
         leftMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
             if (taskDiffLeftSortMemoryAscending) {
-                taskDtoDiffListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator().reversed());
+                mergedTaskListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator().reversed());
             } else {
-                taskDtoDiffListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator());
+                mergedTaskListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator());
             }
             taskDiffLeftSortMemoryAscending = !taskDiffLeftSortMemoryAscending;
         });
 
-        // Diff sign
+        // Diff sign column
         TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Diff");
         diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().nameProperty());
 
-        // Right task
+        // Right task columns
         TableColumn<TaskDtoDiff, String> rightNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> rightPidColumn = new TableColumn<>("PID");
         TableColumn<TaskDtoDiff, String> rightMemoryColumn = new TableColumn<>("Memory");
@@ -216,9 +165,9 @@ public class MainApp extends Application {
         rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryHumanReadableProperty());
         rightMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
             if (taskDiffRightSortMemoryAscending) {
-                taskDtoDiffListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator().reversed());
+                mergedTaskListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator().reversed());
             } else {
-                taskDtoDiffListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator());
+                mergedTaskListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator());
             }
             taskDiffRightSortMemoryAscending = !taskDiffRightSortMemoryAscending;
         });
@@ -238,6 +187,60 @@ public class MainApp extends Application {
         BorderPane tabRoot = new BorderPane();
         tabRoot.setCenter(table);
         return tabRoot;
+    }
+
+    private ObservableList<TaskDtoDiff> mergeTaskLists(List<TaskDto> left, List<TaskDto> right) {
+        Map<String, TaskDto> leftMap = new HashMap<>();
+        for (TaskDto taskDto : left) {
+            leftMap.put(taskDto.getName(), taskDto);
+        }
+
+        Map<String, TaskDto> rightMap = new HashMap<>();
+        for (TaskDto taskDto : right) {
+            rightMap.put(taskDto.getName(), taskDto);
+        }
+
+        Set<String> allTaskNames = new HashSet<>(leftMap.keySet());
+        allTaskNames.addAll(rightMap.keySet());
+
+        // Merge
+        List<TaskDtoDiff> taskDtoDiffList = new ArrayList<>();
+        TaskDto emptyTask = new TaskDto.Builder()
+                .withName("-")
+                .withPid(0)
+                .withMemory(0)
+                .build();
+        for (String taskName : allTaskNames) {
+            TaskDto leftTask = emptyTask;
+            TaskDto rightTask = emptyTask;
+            if (leftMap.containsKey(taskName)) {
+                leftTask = leftMap.get(taskName);
+            }
+            if (rightMap.containsKey(taskName)) {
+                rightTask = rightMap.get(taskName);
+            }
+            // Determine DiffSign
+            DiffSign diffSign;
+            if (leftTask.equals(emptyTask)) {
+                diffSign = DiffSign.REMOVED;
+            } else if (rightTask.equals(emptyTask)) {
+                diffSign = DiffSign.ADDED;
+            } else if (leftTask.equals(rightTask)) {
+                diffSign = DiffSign.NO_CHANGES;
+            } else {
+                diffSign = DiffSign.CHANGED;
+            }
+            TaskDtoDiff taskDtoDiff = new TaskDtoDiff(leftTask, diffSign, rightTask);
+            taskDtoDiffList.add(taskDtoDiff);
+        }
+
+        // Sort by Max(left, right) memory
+        taskDtoDiffList.sort((first, second) -> {
+            Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
+            Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
+            return secondMaxMemory.compareTo(firstMaxMemory);
+        });
+        return FXCollections.observableArrayList(taskDtoDiffList);
     }
 
     private <T> Callback<TableColumn<TaskDtoDiff, T>, TableCell<TaskDtoDiff, T>> colorHighlightCallback(DiffSign... allowed) {

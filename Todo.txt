@@ -8,5 +8,5 @@
 +5. Add support for recent files.
 6. Localization. (Should work on any Windows).
 7. Allow setting tasklist command args through .porperties file.
-8. Checkout from Git and verify buildability and functionality.
++8. Checkout from Git and verify buildability and functionality.
 
