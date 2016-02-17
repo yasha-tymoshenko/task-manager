@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -173,7 +174,7 @@ public class MainApp extends Application {
         TableView<TaskDtoDiff> table = new TableView<>(taskDtoDiffListObservable);
 
         // Left task
-        TableColumn<TaskDtoDiff, String> leftNameColumn = new TableColumn<>("Name");
+        TableColumn<TaskDtoDiff, String> leftNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> leftPidColumn = new TableColumn<>("PID");
         TableColumn<TaskDtoDiff, Number> leftMemoryColumn = new TableColumn<>("Memory");
         leftNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().nameProperty());
@@ -185,12 +186,21 @@ public class MainApp extends Application {
         diffSignColumn.setCellValueFactory(cellData -> cellData.getValue().getDiffSign().nameProperty());
 
         // Right task
-        TableColumn<TaskDtoDiff, String> rightNameColumn = new TableColumn<>("Name");
+        TableColumn<TaskDtoDiff, String> rightNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> rightPidColumn = new TableColumn<>("PID");
         TableColumn<TaskDtoDiff, Number> rightMemoryColumn = new TableColumn<>("Memory");
         rightNameColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().nameProperty());
         rightPidColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().pidProperty());
         rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryProperty());
+
+        // Color highlight
+        leftNameColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED));
+        leftPidColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED));
+        leftMemoryColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED, DiffSign.CHANGED));
+
+        rightNameColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED));
+        rightPidColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED));
+        rightMemoryColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED, DiffSign.CHANGED));
 
         table.getColumns().addAll(leftNameColumn, leftPidColumn, leftMemoryColumn,
                 diffSignColumn, rightNameColumn, rightPidColumn, rightMemoryColumn);
@@ -198,6 +208,46 @@ public class MainApp extends Application {
         BorderPane tabRoot = new BorderPane();
         tabRoot.setCenter(table);
         return tabRoot;
+    }
+
+    private <T> Callback<TableColumn<TaskDtoDiff, T>, TableCell<TaskDtoDiff, T>> colorHighlightCallback(DiffSign... allowed) {
+        return column -> new TableCell<TaskDtoDiff, T>() {
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+
+                TableRow<TaskDtoDiff> tableRow = getTableRow();
+                if (tableRow != null) {
+                    TaskDtoDiff diff = tableRow.getItem();
+                    if (item != null && !empty) {
+                        setText(item.toString());
+                        if (Arrays.asList(allowed).contains(diff.getDiffSign())) {
+                            switch (diff.getDiffSign()) {
+                                case ADDED:
+                                    setStyle("-fx-background-color: Aquamarine");
+                                    break;
+                                case REMOVED:
+                                    setStyle("-fx-background-color: DarkSalmon");
+                                    break;
+                                case CHANGED:
+                                    setStyle("-fx-background-color: Khaki");
+                                    break;
+                                default:
+                                    setStyle("");
+                            }
+                        }
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        };
+    }
+
+    private TableColumn<TaskDtoDiff, String> makeStringColumn(String columnName) {
+        TableColumn<TaskDtoDiff, String> column = new TableColumn<>(columnName);
+        column.setPrefWidth(158);
+        return column;
     }
 
     private void showExceptionDialog(String headerMessage, String mainMessage, Exception exception) {
