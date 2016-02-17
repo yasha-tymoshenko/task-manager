@@ -80,10 +80,11 @@ public class MainApp extends Application {
     }
 
     public void sortByMemory(Boolean ascending) {
+        MemoryUsedDescendingComparator descendingComparator = new MemoryUsedDescendingComparator();
         if (ascending) {
-            taskList.sort(new MemoryUsedDescendingComparator().reversed());
+            taskList.sort(descendingComparator.reversed());
         } else {
-            taskList.sort(new MemoryUsedDescendingComparator());
+            taskList.sort(descendingComparator);
         }
     }
 
@@ -144,10 +145,11 @@ public class MainApp extends Application {
         leftPidColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().pidProperty());
         leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryHumanReadableProperty());
         leftMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
+            TaskDtoDiffLeftMemoryDescendingComparator descendingComparator = new TaskDtoDiffLeftMemoryDescendingComparator();
             if (taskDiffLeftSortMemoryAscending) {
-                mergedTaskListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator().reversed());
+                mergedTaskListObservable.sort(descendingComparator.reversed());
             } else {
-                mergedTaskListObservable.sort(new TaskDtoDiffLeftMemoryDescendingComparator());
+                mergedTaskListObservable.sort(descendingComparator);
             }
             taskDiffLeftSortMemoryAscending = !taskDiffLeftSortMemoryAscending;
         });
@@ -164,21 +166,22 @@ public class MainApp extends Application {
         rightPidColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().pidProperty());
         rightMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getRight().memoryHumanReadableProperty());
         rightMemoryColumn.sortTypeProperty().addListener((observable, oldValue, newValue) -> {
+            TaskDtoDiffRightMemoryDescendingComparator descendingComparator = new TaskDtoDiffRightMemoryDescendingComparator();
             if (taskDiffRightSortMemoryAscending) {
-                mergedTaskListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator().reversed());
+                mergedTaskListObservable.sort(descendingComparator.reversed());
             } else {
-                mergedTaskListObservable.sort(new TaskDtoDiffRightMemoryDescendingComparator());
+                mergedTaskListObservable.sort(descendingComparator);
             }
             taskDiffRightSortMemoryAscending = !taskDiffRightSortMemoryAscending;
         });
 
         // Color highlight
         leftNameColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED));
-        leftPidColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED));
+        leftPidColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED, DiffSign.CHANGED));
         leftMemoryColumn.setCellFactory(colorHighlightCallback(DiffSign.ADDED, DiffSign.CHANGED));
 
         rightNameColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED));
-        rightPidColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED));
+        rightPidColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED, DiffSign.CHANGED));
         rightMemoryColumn.setCellFactory(colorHighlightCallback(DiffSign.REMOVED, DiffSign.CHANGED));
 
         table.getColumns().addAll(leftNameColumn, leftPidColumn, leftMemoryColumn,
@@ -265,7 +268,23 @@ public class MainApp extends Application {
                                     setStyle("-fx-background-color: DarkSalmon");
                                     break;
                                 case CHANGED:
-                                    setStyle("-fx-background-color: Khaki");
+                                    // Determine, changed PID or memory?
+                                    TableColumn<TaskDtoDiff, T> tableColumn = getTableColumn();
+                                    int index = getTableView().getColumns().indexOf(tableColumn);
+                                    final int _pidIndexLeft = 1;
+                                    final int _pidIndexRight = 5;
+                                    final int _MemoryIndexLeft = 2;
+                                    final int _MemoryIndexRight = 6;
+                                    if (index == _pidIndexLeft || index == _pidIndexRight) {
+                                        if (!diff.getLeft().getPid().equals(diff.getRight().getPid())) {
+                                            setStyle("-fx-background-color: Khaki");
+                                        }
+                                    }
+                                    if (index == _MemoryIndexLeft || index == _MemoryIndexRight) {
+                                        if (!diff.getLeft().getMemory().equals(diff.getRight().getMemory())) {
+                                            setStyle("-fx-background-color: Khaki");
+                                        }
+                                    }
                                     break;
                                 default:
                                     setStyle("");
