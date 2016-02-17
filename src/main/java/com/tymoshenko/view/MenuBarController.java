@@ -1,7 +1,6 @@
 package com.tymoshenko.view;
 
 import com.tymoshenko.MainApp;
-import com.tymoshenko.model.ExportFormat;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class MenuBarController {
             if (!file.getPath().endsWith(".xml")) {
                 file = new File(file.getPath() + ".xml");
             }
-            mainApp.doExport(file, ExportFormat.XML);
+            mainApp.doExport(file);
         }
     }
 
@@ -48,7 +47,7 @@ public class MenuBarController {
             if (!file.getPath().endsWith(".xls")) {
                 file = new File(file.getPath() + ".xls");
             }
-            mainApp.doExportToExcel(file, ExportFormat.Excel);
+            mainApp.doExportToExcel(file);
         }
     }
 

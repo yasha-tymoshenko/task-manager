@@ -56,7 +56,6 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/java/com/tymoshenko/view</directory>
-                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
@@ -72,7 +71,6 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/resources</directory>
-                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>

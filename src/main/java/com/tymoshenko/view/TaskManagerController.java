@@ -1,15 +1,11 @@
 package com.tymoshenko.view;
 
 import com.tymoshenko.MainApp;
-import com.tymoshenko.model.ExportFormat;
 import com.tymoshenko.model.TaskDto;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-
-import java.io.File;
 
 
 /**
