@@ -5,6 +5,7 @@ import com.tymoshenko.controller.exporting.Exporter;
 import com.tymoshenko.controller.importing.Importer;
 import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.controller.task_monitor.comparator.TaskDtoDiffLeftMemoryDescendingComparator;
+import com.tymoshenko.controller.task_monitor.comparator.TaskDtoDiffMaxMemoryDescendingComparator;
 import com.tymoshenko.controller.task_monitor.comparator.TaskDtoDiffRightMemoryDescendingComparator;
 import com.tymoshenko.model.DiffSign;
 import com.tymoshenko.model.TaskDto;
@@ -238,11 +239,7 @@ public class MainApp extends Application {
         }
 
         // Sort by Max(left, right) memory
-        taskDtoDiffList.sort((first, second) -> {
-            Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
-            Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
-            return secondMaxMemory.compareTo(firstMaxMemory);
-        });
+        taskDtoDiffList.sort(new TaskDtoDiffMaxMemoryDescendingComparator());
         return FXCollections.observableArrayList(taskDtoDiffList);
     }
 
