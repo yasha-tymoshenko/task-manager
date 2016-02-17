@@ -1,9 +1,13 @@
 package com.tymoshenko.model;
 
+import com.tymoshenko.util.MemoryUnit;
+import com.tymoshenko.util.MemoryUnitParser;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.property.adapter.JavaBeanObjectProperty;
+import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
 
 import javax.xml.bind.annotation.*;
 import java.util.Locale;
@@ -53,12 +57,14 @@ public class TaskDto {
     private StringProperty name = new SimpleStringProperty();
     private LongProperty pid = new SimpleLongProperty();
     private LongProperty memory = new SimpleLongProperty();
+    private SimpleStringProperty memoryHumanReadable = new SimpleStringProperty();
 
     // Copy constructor
     public TaskDto(TaskDto taskDto) {
         this.name.set(taskDto.getName());
         this.pid.set(taskDto.getPid());
         this.memory.set(taskDto.getMemory());
+        updateMemoryHumanReadable();
     }
 
     // Private constructor needed by JAXB
@@ -70,6 +76,13 @@ public class TaskDto {
         this.name.set(builder.name);
         this.pid.set(builder.pid);
         this.memory.set(builder.memory);
+        updateMemoryHumanReadable();
+    }
+
+    private void updateMemoryHumanReadable() {
+        long kyloBytes = MemoryUnit.KB.getDivider() * memory.get();
+        String memoryHumanReadable = MemoryUnitParser.parse(kyloBytes);
+        this.memoryHumanReadable.set(memoryHumanReadable);
     }
 
     @Override
@@ -113,6 +126,14 @@ public class TaskDto {
         return memory.get();
     }
 
+    public String getMemoryHumanReadable() {
+        return memoryHumanReadable.get();
+    }
+
+    public SimpleStringProperty memoryHumanReadableProperty() {
+        return memoryHumanReadable;
+    }
+
     public void setName(String name) {
         this.name.set(name);
     }
@@ -123,6 +144,7 @@ public class TaskDto {
 
     public void setMemory(Long memory) {
         this.memory.set(memory);
+        updateMemoryHumanReadable();
     }
 
     public StringProperty nameProperty() {

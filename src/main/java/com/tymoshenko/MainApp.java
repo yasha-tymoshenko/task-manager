@@ -134,6 +134,7 @@ public class MainApp extends Application {
         Set<String> allTaskNames = new HashSet<>(leftMap.keySet());
         allTaskNames.addAll(rightMap.keySet());
 
+        // Merge current and imported lists
         List<TaskDtoDiff> taskDtoDiffList = new ArrayList<>();
         TaskDto emptyTask = new TaskDto.Builder()
                 .withName("-")
@@ -164,7 +165,6 @@ public class MainApp extends Application {
             taskDtoDiffList.add(taskDtoDiff);
         }
 
-
         taskDtoDiffList.sort((first, second) -> {
             Long firstMaxMemory = Math.max(first.getLeft().getMemory(), first.getRight().getMemory());
             Long secondMaxMemory = Math.max(second.getLeft().getMemory(), second.getRight().getMemory());
@@ -173,13 +173,14 @@ public class MainApp extends Application {
         ObservableList<TaskDtoDiff> taskDtoDiffListObservable = FXCollections.observableArrayList(taskDtoDiffList);
         TableView<TaskDtoDiff> table = new TableView<>(taskDtoDiffListObservable);
 
+        // Display merged tasklist in table
         // Left task
         TableColumn<TaskDtoDiff, String> leftNameColumn = makeStringColumn("Name");
         TableColumn<TaskDtoDiff, Number> leftPidColumn = new TableColumn<>("PID");
-        TableColumn<TaskDtoDiff, Number> leftMemoryColumn = new TableColumn<>("Memory");
+        TableColumn<TaskDtoDiff, String> leftMemoryColumn = new TableColumn<>("Memory");
         leftNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().nameProperty());
         leftPidColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().pidProperty());
-        leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryProperty());
+        leftMemoryColumn.setCellValueFactory(cellData -> cellData.getValue().getLeft().memoryHumanReadableProperty());
 
         // Diff sign
         TableColumn<TaskDtoDiff, String> diffSignColumn = new TableColumn<>("Diff");
@@ -243,11 +244,7 @@ public class MainApp extends Application {
                     }
                 }
             }
-
-
         };
-
-
     }
 
     private TableColumn<TaskDtoDiff, String> makeStringColumn(String columnName) {

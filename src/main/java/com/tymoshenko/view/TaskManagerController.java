@@ -29,7 +29,7 @@ public class TaskManagerController {
     private TableColumn<TaskDto, Number> pidColumn;
 
     @FXML
-    private TableColumn<TaskDto, Number> memoryUsedColumn;
+    private TableColumn<TaskDto, String> memoryUsedColumn;
 
     @FXML
     private CheckBox groupByNameCheckBox;
@@ -41,7 +41,7 @@ public class TaskManagerController {
     private void initialize() {
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         pidColumn.setCellValueFactory(cellData -> cellData.getValue().pidProperty());
-        memoryUsedColumn.setCellValueFactory(cellData -> cellData.getValue().memoryProperty());
+        memoryUsedColumn.setCellValueFactory(cellData -> cellData.getValue().memoryHumanReadableProperty());
     }
 
     @FXML
