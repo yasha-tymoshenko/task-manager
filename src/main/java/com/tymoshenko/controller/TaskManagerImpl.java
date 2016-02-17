@@ -1,7 +1,7 @@
 package com.tymoshenko.controller;
 
 import com.tymoshenko.controller.task_monitor.TaskMonitor;
-import com.tymoshenko.controller.task_monitor.comparator.MemoryUsedDescendingComparator;
+import com.tymoshenko.util.comparator.MemoryUsedDescendingComparator;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

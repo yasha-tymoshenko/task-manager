@@ -1,6 +1,5 @@
 package com.tymoshenko.controller.importing;
 
-import com.tymoshenko.MainApp;
 import com.tymoshenko.model.TaskDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Yakiv

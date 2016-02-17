@@ -1,11 +1,10 @@
 package com.tymoshenko.controller.task_monitor;
 
 import com.tymoshenko.controller.task_monitor.command.Command;
-import com.tymoshenko.controller.task_monitor.comparator.NameAscendingComparator;
+import com.tymoshenko.util.comparator.NameAscendingComparator;
 import com.tymoshenko.controller.task_monitor.parser.TaskListParser;
 import com.tymoshenko.model.TaskDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 

@@ -1,6 +1,5 @@
 package com.tymoshenko.controller.task_monitor.parser;
 
-import com.tymoshenko.MainApp;
 import com.tymoshenko.model.TaskDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;

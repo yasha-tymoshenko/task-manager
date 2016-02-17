@@ -1,4 +1,4 @@
-package com.tymoshenko.controller.task_monitor.comparator;
+package com.tymoshenko.util.comparator;
 
 import com.tymoshenko.model.TaskDtoDiff;
 

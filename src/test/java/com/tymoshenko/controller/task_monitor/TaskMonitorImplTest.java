@@ -1,6 +1,5 @@
 package com.tymoshenko.controller.task_monitor;
 
-import com.tymoshenko.MainApp;
 import com.tymoshenko.controller.task_monitor.command.Command;
 import com.tymoshenko.controller.task_monitor.parser.TaskListParser;
 import com.tymoshenko.model.TaskDto;
